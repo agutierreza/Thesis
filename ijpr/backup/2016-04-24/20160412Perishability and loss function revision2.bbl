@@ -1,0 +1,166 @@
+\begin{thebibliography}{25}
+\newcommand{\enquote}[1]{``#1''}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\normalfont{#1}}
+\providecommand{\urlprefix}{ }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+
+\bibitem[Alcoba et~al.(2015)Alcoba, Hendrix, Garci­a, Ortega, Pauls-Worm, and
+  Haijema]{GAlcoba:ICCSA2015}
+Alcoba, Alejandro~G., Eligius~M.T. Hendrix, Inmaculada Garci­a, Gloria Ortega,
+  KarinG.J. Pauls-Worm, and Rene Haijema. 2015.
+\newblock ``On Computing Order Quantities for Perishable Inventory Control with
+  Non-stationary Demand.'' In \emph{Computational Science and Its Applications
+  ICCSA 2015,}  Vol. 9156 of \emph{Lecture Notes in Computer Science}  edited
+  by Osvaldo Gervasi, Beniamino Murgante, Sanjay Misra, Marina~L. Gavrilova,
+  Ana Maria Alves~Coutinho Rocha, Carmelo Torre, David Taniar, and Bernady~O.
+  Apduhan, 429--444. Springer International Publishing.
+
+\bibitem[Askin(1981)]{Askin}
+Askin, Ronald~G. 1981.
+\newblock ``A Procedure for Production Lot Sizing with Probabilistic Dynamic
+  Demand.'' \emph{A I I E Transactions} 13 (2): 132--137.
+
+\bibitem[Bakker, Riezebos, and Teunter(2012)]{citeulike:10674763}
+Bakker, Monique, Jan Riezebos, and Ruud~H. Teunter. 2012.
+\newblock ``Review of inventory systems with deterioration since 2001.''
+  \emph{European Journal of Operational Research} 221 (2): 275--284.
+
+\bibitem[Bollapragada and Morton(1999)]{Bollapragada:1999}
+Bollapragada, Srinivas, and Thomas~E. Morton. 1999.
+\newblock ``A Simple Heuristic for Computing Nonstationary (S, S) Policies.''
+  \emph{Oper. Res.} 47 (4): 576--584.
+
+\bibitem[Bookbinder and Tan(1988)]{BookbinderandTan}
+Bookbinder, James~H., and Jin-Yan Tan. 1988.
+\newblock ``Strategies for the Probabilistic Lot-Sizing Problem with
+  Service-Level Constraints.'' \emph{Management Science} 34 (9): 1096--1108.
+
+\bibitem[Caliskan-Demirag, Chen, and Yang(2012)]{doi:10.1287/opre.1110.1033}
+Caliskan-Demirag, Ozgun, Youhua~F. Chen, and Yi~Yang. 2012.
+\newblock ``Ordering Policies for {Periodic-Review} Inventory Systems with
+  {Quantity-Dependent} Fixed Costs.'' \emph{Operations Research} 60 (4):
+  785--796.
+
+\bibitem[Chen, Pang, and Pan(2014)]{doi:10.1287/opre.2014.1261}
+Chen, Xin, Zhan Pang, and Limeng Pan. 2014.
+\newblock ``Coordinating Inventory Control and Pricing Strategies for
+  Perishable Products.'' \emph{Operations Research} 62 (2): 284--300.
+
+\bibitem[Federgruen and Wang(2015)]{Federgruen}
+Federgruen, Awi, and Min Wang. 2015.
+\newblock ``Inventory Models with Shelf-Age and Delay-Dependent Inventory
+  Costs.'' \emph{Operations Research} 63 (3): 701--715.
+
+\bibitem[Hendrix et~al.(2012)Hendrix, Haijema, Rossi, and
+  Pauls-Worm]{citeulike:12534249}
+Hendrix, Eligius M.~T., Rene Haijema, Roberto Rossi, and Karin~G. Pauls-Worm.
+  2012.
+\newblock ``On Solving a Stochastic Programming Model for Perishable Inventory
+  Control.'' In \emph{Computational Science and Its Applications ICCSA 2012,}
+  Vol. 7335 of \emph{Lecture Notes in Computer Science}  edited by Beniamino
+  Murgante, Osvaldo Gervasi, Sanjay Misra, Nadia Nedjah, AnaMariaA Rocha, David
+  Taniar, and BernadyO Apduhan, 45--56. Springer Berlin Heidelberg.
+
+\bibitem[Karaesmen, Scheller-Wolf, and Deniz(2011)]{citeulike:11825044}
+Karaesmen, Itir~Z., Alan Scheller-Wolf, and Borga Deniz. 2011.
+\newblock ``Managing Perishable and Aging Inventories: Review and Future
+  Research Directions.'' In \emph{Planning Production and Inventories in the
+  Extended Enterprise,}  Vol. 151 of \emph{International Series in Operations
+  Research \& Management Science}  edited by Karl~G. Kempf, P{\i}nar
+  Keskinocak, and Reha Uzsoy, 393--436. Springer US.
+
+\bibitem[Li and Yu(2014)]{doi:10.1287/msom.2014.0488}
+Li, Qing, and Peiwen Yu. 2014.
+\newblock ``Multimodularity and Its Applications in Three Stochastic Dynamic
+  Inventory Problems.'' \emph{Manufacturing \& Service Operations Management}
+  16 (3): 455--463.
+
+\bibitem[Minner and Transchel(2010)]{citeulike:6806835}
+Minner, Stefan, and Sandra Transchel. 2010.
+\newblock ``Periodic review inventory-control for perishable products under
+  service-level constraints.'' \emph{OR Spectrum} 32 (4): 979--996.
+
+\bibitem[Nahmias(1982)]{citeulike:11825042}
+Nahmias, Steven. 1982.
+\newblock ``Perishable Inventory Theory: A Review.'' \emph{Operations Research}
+  30 (4): 680--708.
+
+\bibitem[Pauls-Worm et~al.(2015)Pauls-Worm, Hendrix, Alcoba, and
+  Haijema]{PaulsWorm2015}
+Pauls-Worm, Karin~G.J., Eligius~M.T. Hendrix, Alejandro~G. Alcoba, and Rene
+  Haijema. 2015.
+\newblock ``Order quantities for perishable inventory control with
+  non-stationary demand and a fill rate constraint.'' \emph{International
+  Journal of Production Economics} --.
+
+\bibitem[Pauls-Worm et~al.(2014)Pauls-Worm, Hendrix, Haijema, and van~der
+  Vorst]{citeulike:13666707}
+Pauls-Worm, Karin G.~J., Eligius M.~T. Hendrix, Ren\'{e} Haijema, and Jack G.
+  A.~J. van~der Vorst. 2014.
+\newblock ``An {MILP} approximation for ordering perishable products with
+  non-stationary demand and service level constraints.'' \emph{International
+  Journal of Production Economics} 157: 133--146.
+
+\bibitem[Rossi(2013)]{citeulike:12592650}
+Rossi, Roberto. 2013.
+\newblock ``Periodic Review for a Perishable Item under Non Stationary
+  Stochastic Demand.'' In \emph{Manufacturing Modelling, Management, and
+  Control, Volume 7, Part 1,}   edited by Bakhtadze Natalia, Jun., 2021--2026.
+  International Federation of Automatic Control.
+
+\bibitem[Rossi, Kilic, and Tarim(2015)]{citeulike:13341691}
+Rossi, Roberto, Onur~A. Kilic, and S.~Armagan Tarim. 2015.
+\newblock ``Piecewise linear approximations for the static-dynamic uncertainty
+  strategy in stochastic lot-sizing.'' \emph{Omega} 50: 126--140.
+
+\bibitem[Rossi et~al.(2010)Rossi, Tarim, Hnich, and
+  Prestwich]{citeulike:7288002}
+Rossi, Roberto, S.~Armagan Tarim, Brahim Hnich, and Steven Prestwich. 2010.
+\newblock ``Computing the non-stationary replenishment cycle inventory policy
+  under stochastic supplier lead-times.'' \emph{International Journal of
+  Production Economics} 127 (1): 180--189.
+
+\bibitem[Rossi et~al.(2014)Rossi, Tarim, Prestwich, and
+  Hnich]{citeulike:13075114}
+Rossi, Roberto, S.~Armagan Tarim, Steven Prestwich, and Brahim Hnich. 2014.
+\newblock ``Piecewise linear lower and upper bounds for the standard normal
+  first order loss function.'' \emph{Applied Mathematics and Computation} 231:
+  489--502.
+
+\bibitem[Silver(1978)]{citeulike:7292564}
+Silver, Edward~A. 1978.
+\newblock ``Inventory control under a probabilistic time-varying, demand
+  pattern.'' \emph{A I I E Transactions} 10 (4): 371--379.
+
+\bibitem[Silver and Meal(1973)]{SilverMeal1973}
+Silver, Edward~A., and Harlan~C. Meal. 1973.
+\newblock ``A heuristic for selecting lot size quantities for the case of a
+  deterministic time-varying demand rate and discrete opportunities for
+  replenishment.'' \emph{Production and Inventory Management} 14 (2): 64--74.
+
+\bibitem[Tarim and Kingsman(2006)]{citeulike:12317242}
+Tarim, S.~Armagan, and Brian~G. Kingsman. 2006.
+\newblock ``Modelling and computing ({Rn,Sn}) policies for inventory systems
+  with non-stationary stochastic demand.'' \emph{European Journal of
+  Operational Research} 174 (1): 581--599.
+
+\bibitem[Tunc et~al.(2011)Tunc, Kilic, Tarim, and Eksioglu]{citeulike:7928534}
+Tunc, Huseyin, Onur~A. Kilic, S.~Armagan Tarim, and Burak Eksioglu. 2011.
+\newblock ``The cost of using stationary inventory policies when demand is
+  non-stationary.'' \emph{Omega} 39 (4): 410--415.
+
+\bibitem[Wagner and Whitin(1958)]{Wagner:dynamiclotsize}
+Wagner, Harvey~M., and Thomson~M. Whitin. 1958.
+\newblock ``Dynamic Version of the Economic Lot Size Model.'' \emph{Management
+  Science} 5 (1): 89--96.
+
+\bibitem[Yang, Chen, and Zhou(2014)]{doi:10.1287/opre.2013.1238}
+Yang, Yi, Youhua~F. Chen, and Yun Zhou. 2014.
+\newblock ``Coordinating Inventory Control and Pricing Strategies Under Batch
+  Ordering.'' \emph{Operations Research} 62 (1): 25--37.
+
+\end{thebibliography}

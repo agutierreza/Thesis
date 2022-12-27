@@ -1,0 +1,336 @@
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  ejemplo.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%%%%%% Fichero de ejemplo LaTeX que ilustra el uso de la Hoja de Estilo %%%%%%
+%%%%%% Jornadas.cls para Jornadas Sarteco.              %%%%%%
+%
+%\documentclass[twocolumn,twoside]{Jornadas}
+%\usepackage[latin1]{inputenc}
+%\usepackage[dvips]{epsfig}
+%\usepackage{graphicx}
+%\usepackage{amsmath}
+%\usepackage{color}
+%\usepackage{amssymb}
+%\usepackage{graphicx}
+%\usepackage{epstopdf}
+%\usepackage{algorithm,algpseudocode}
+%\usepackage{multirow}
+%\usepackage{url}
+%\usepackage{breakurl}
+%\usepackage{hyperref}
+%
+%\def\FUNCT{{\bf Funct}\ }
+%\def\PROC{{\bf Proc}\ }
+%\def\AND{\mathrel{\,\text{\bf and }\,}}
+%\def\OR{\mathrel{\,\text{\bf or }\,}}
+%\def\NOT{\mathrel{\,\text{\bf not }\,}}
+%\def\IF{{\bf if}\ }
+%\def\ELSE{{\bf else}\ }
+%\def\ELSIF{{\bf elsif}\ }
+%\def\WHILE{{\bf while}\ }
+%\def\DO{{\bf do}\ }
+%\def\FOR{{\bf for}\ }
+%\def\TO{{\bf to}\ }
+%\def\RETURN{{\bf return}\ }
+%\def\COMMENT{{\bf comment:}\ }
+%
+%
+%
+%\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+%    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+%
+%\newtheorem{theorem}{Teorema}
+%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%\hyphenation{pa-ra-le-lis-mo pro-cee-dings de-ma-sia-do Su-ge-ri-mos
+%             mo-di-fi-ca-cio-nes afi-lia-cio-nes re-fe-ren-te co-men-ta-rios
+%             usan-do pro-ble-ma plan-ti-lla}
+%
+%\begin{document}
+
+
+%\title{Implementaciones paralelas para un problema de control de inventarios de productos perecederos}
+%
+%\author{%
+%     Alejandro G. Alcoba, Eligius M.T. Hendrix, Inmaculada Garc\'ia%
+%     \thanks{Computer Architecture, Universidad de M{\'a}laga, e-mail: {\tt \{agutierreza,eligius,igarciaf\}@uma.es}},
+%      Gloria Ortega %
+%     \thanks{Informatics, Univ. of Almer\'ia, Agrifood Campus of Int. Excell., ceiA3, e-mail: gloriaortega@ual.es {\tt }}
+%      %Karin G.J. Pauls-Worm, Rene Haijema%
+%     %\thanks{Operations Research and Logistics, Wageningen University, e-mail: {\tt }}
+%}
+%
+%\maketitle
+%% Oculta las cabeceras y los n\'umeros de p\'agina.
+%% Ambos elemetos se a\~nadir\'an durante la edici\'on de las actas completas.
+%\markboth{}{}
+%\pagestyle{empty}
+%\thispagestyle{empty} % Oculta el n\'umero de la primera p\'agina
+%
+%\begin{abstract}
+%En este trabajo se analizan y eval\'uan dos implementaciones de un algoritmo de optimizaci\'on para un problema de control de inventarios de productos perecederos. Las implementaciones se han llevado a cabo utilizando una arquitectura heterog\'enea donde cada nodo está compuesto por varios multicores y varias GPUs. Las versiones paralelas que se han desarrollado son: (1) una versi\'on MPI-PTHREADS  en la que se extrae el paralelismo tanto a nivel de proceso MPI como a nivel de hilo y (2) una versi\'on multiGPU en la que se obtiene el paralelismo a nivel de proceso MPI y a nivel de cores de GPU.
+%Este algoritmo puede ser descompuesto fácilmente en un conjunto de tareas que no presentan ninguna dependencia entre s\'i. Sin embargo, la carga computacional asociada a cada una de las tareas es diferente y el problema del reparto de las tareas entre los elementos de proceso se puede modelar como un problema de Bin Packing. Ello implica que la selecci\'on del conjunto de tareas asociadas a cada una de las unidades de computaci\'on requiere del dise\~no de heur\'isticas que sean capaces de balancear la carga eficientemente y de forma est\'atica. En este trabajo hemos analizado y evaluado varias heur\'isticas. Finalmente, la mejor heur\'istica ha sido la utilizada en la implementaci\'on paralela del algoritmo de control de inventarios que ha sido evaluado en la versi\'on MPI-PTHREADS y en la versi\'on multiGPU. Para la implementaci\'on MPI-PTHREADS los resultados obtenidos muestran una buena escalabilidad mientras que las versi\'on MultiGPU para el ejemplo que se ha evaluado deja de ser eficiente cuando se usan mas de 2 GPUs.
+%\end{abstract}
+%
+%\begin{keywords}
+%Multihilo, Multi-GPU, Bin Packing, Monte-Carlo, inventarios, productos perecederos.
+%\end{keywords}
+%\usepackage[utf8]{inputenc}
+\chapter*{Resumen en espa\~nol}
+\label{AppendixA}
+%\ifpdf
+%\graphicspath{{X/figures/PNG/}{X/figures/PDF/}{X/figures/}}
+%\else
+%\graphicspath{{X/figures/EPS/}{X/figures/}}
+%\fi
+\section*{Introducci\'on}
+Esta tesis analiza aplicaciones de toma de decisiones din\'amica para un conjunto de problemas. Pueden diferenciarse dos l\'ineas principales. La primera trata problemas de gesti\'on de la cadena de suministro para productos perecederos, mientras que la segunda estudia el dise\~no de flotas de embarcaciones para realizar labores de mantenimiento en parques e\'olicos marinos. Los modelos de inventario para productos perecederos estudiados en esta tesis consideran un \'unico producto, una \'unica localizaci\'on de suministro y una planificaci\'on de producci\'on sobre un horizonte de tiempo finito.
+
+Los principales objetivos de esta tesis son los siguientes: (1) estudiar que pol\'iticas de pedido son las m\'as apropiadas para los problemas de tama\~no de lote. ?`En qu\'e casos una pol\'itica de pedido da una soluci\'on \'optima?; (2) analizar el efecto del uso de computaci\'on paralela para mejorar el rendimiento de los algoritmos derivados y as\'i dise\~nar pol\'iticas para problemas de tama\~no de lote de productos perecederos; (3) explorar c\'omo de efectivas pueden ser las heur\'isticas para problemas de toma de decisiones din\'amica sobre el tama\~no de lote de productos perecederos; (4) elaborar un modelo MILP para seleccionar una flota de embarcaciones con el fin de realizar las operaciones de mantenimiento en parques e\'olicos marinos; y (5) dise\~nar una heur\'istica para programar las operaciones de mantenimiento en parques e\'olicos marinos considerando fallos en turbinas e incertidumbre meteorol\'ogica.
+
+
+En el primer cap\'itulo de esta tesis se realiza una introducci\'on a la teor\'ia de control de inventarios y  se justifican las motivaciones que han llevado a cabo el desarrollo del trabajo que se incluye en esta tesis. Los cap\'itulos posteriores tratan independientemente cada uno del los objetivos anteriormente mencionados. En el segundo cap\'itulo, un modelo de programaci\'on estoc\'astica es presentado para un problema pr\'actico de planificaci\'on de producci\'on de un producto perecedero en un horizonte de tiempo finito. Una pol\'itica est\'atica es estudiada para el modelo. Tal pol\'itica ha demostrado ser \'optima asumiendo una estrategia de incertidumbre est\'atica, que es considerada para instancias con un tiempo de espera largo. El tercer cap\'itulo trata el uso de computaci\'on paralela para los algoritmos desarrollados en el cap\'itulo previo. Dos implementaciones fueron desarrolladas sobre plataformas heterog\'eneas: una versi\'on multi-GPU usando CUDA y una versi\'on multicore usando Pthreads y MPI. Para la primera implementaci\'on, la simulaci\'on de Monte Carlo (la tarea m\'as costosa), es paralelizada. Ambas implementaciones mostraron una buena escalabilidad. El cuarto cap\'itulo trata la efectividad de heur\'isticas para problemas de tama\~no de lote de productos perecederos similar. La cl\'asica heur\'istica de Silver es extendida para productos perecederos y se presentan variantes del procedimiento: una anal\'itica y una basada en simulaci\'on. Los resultados de la heur\'istica son comparados con las soluciones \'optimas dadas por un modelo SDP (Stochastic Dynamic Programming) generado para el problema, mostrando que los costes de las heur\'isticas presentan, de media, un 5\% sobre el coste \'optimo para la estrategia basada en simulaci\'on y un 6\% para la aproximaci\'on anal\'itica. En el quinto cap\'itulo, se presenta un modelo MILP para seleccionar la flota de embarcaciones \'optima para el mantenimiento de un parque e\'olico marino. El modelo se presenta como un problema de dos niveles, seleccionando la flota \'optima en el primer nivel y optimizando la selecci\'on de las operaciones, usando dicha flota, en el segundo. Dado que el modelo es determin\'istico, como otros en la literatura que aspiran a resolver problemas con un horizonte temporal largo usando periodos cortos, el sexto cap\'itulo trata la cuesti\'on de c\'omo la anticipaci\'on de los eventos estoc\'asticos como los fallos en las turbinas o las condiciones meteorol\'ogicas afectan la decisi\'on de la flota de embarcaciones \'optima. Este cap\'itulo presenta una heur\'istica que ilustra este efecto.
+
+
+
+
+
+
+
+
+\section*{Resumen del cap\'itulo \ref{Chap:iccsa2015}}
+
+La base de las implementaciones que se presentan en este cap\'itulo es un algoritmo desarrollado en Matlab para resolver un problema MINLP (Mixed Integer NonLinear Programming). Se trata de planificar, a lo largo de un n\'umero finito de periodos $T$, las cantidades que se deben proveer de cierto producto perecedero para satisfacer la demanda bajo una restricci\'on que establece un nivel de servicio $\beta$ que necesariamente se debe satisfacer. En concreto, esta restricci\'on establece que para cada periodo (siempre hablando en t\'erminos de esperanza matem\'atica) a lo sumo una fracci\'on $\beta$ de la demanda no pueda ser satisfecha y sea perdida por falta de stock, ya que se supone que esta no puede ser servida en un periodo posterior. Esta condici\'on es equivalente a que al menos una fracci\'on $(1-\beta)$ de la demanda sea cubierta en cada periodo. La duraci\'on de cada item producido desde que est\'a disponible para el consumidor hasta que ha de ser retirado es de $J<T$ periodos. Adem\'as, se supone que los productos se distribuyen siguiendo la regla FIFO: los productos son expedidos comenzando por los m\'as antiguos.
+
+El problema de optimizaci\'on que se plantea es el de encontrar la cantidad de producto perecedero que hay que producir en cada periodo de forma que se satisfgan todas las restricciones del problema y que adem\'as se minimice una funci\'on coste.
+A continuaci\'on se detallan las principales variables del modelo:
+
+\smallskip\noindent\emph{\'Indices}\\
+\begin{tabular}{ll}
+	$t$ & \'indice del periodo, $t=1,\ldots,T$, siendo $T$ el  n\'umero total de periodos\\
+	$j$ & \'indice de edad, $j=1,\ldots,J$, siendo $J$ la vida  \'util de cada unidad\\
+\end{tabular}
+
+
+\smallskip\noindent\emph{Par\'ametros}\\
+\begin{tabular}{ll}
+	$\boldsymbol{d}_t$ &
+	\parbox[t]{13cm}{demanda en cada periodo con distribuci\'on
+	normal dada por su media $\mu_t>0$ y varianza
+	$(cv\times \mu_t)^2$ dado por un coeficiente de variaci\'on $cv$, id\'entico en cada periodo}\\
+	$k$ & coste por periodo en el que se decide realizar  un pedido, $k>0$\\
+	$c$ & coste unitario de producto, $c>0$\\
+	$h$ & coste por almacenamiento, $h>0$\\
+	$w$ & coste unitario de desecho, puede ser negativo  con la condici\'on, $w>-c$\\
+	$\beta$ & nivel de servicio, $0<\beta<1$
+\end{tabular}
+
+%\noindent 5pt
+
+\smallskip\noindent\emph{Variables}\\
+\begin{tabular}{ll}
+	$Q_t \ge 0$ & \parbox[t]{12cm}{cantidad de producto producido  y  disponible  en el periodo $t$.  Denotamos por $Q$ al vector completo $(Q_1,\ldots,Q_T)$}\\
+	$Y_t \in \{0,1\}$ & \parbox[t]{12cm}{indica si se produce un pedido en el  periodo $t$. Es 1 si y solo si $Q_t>0$. Denotamos por $Y$ al vector completo  $(Y_1,\ldots,Y_T)$}\\
+	$\boldsymbol{X}_t$ & ventas perdidas en el periodo $t$\\
+	$\boldsymbol{I}_{jt}$ & \parbox[t]{12cm}{inventario de edad $j$ al final del  periodo $t$, considerando un  periodo  inicial fijo,  $I_{j0}=0$, $\boldsymbol{I}_{jt} \ge 0$  para $j=1,\ldots,J$}\\
+\end{tabular}
+
+
+\smallskip\noindent
+Adem\'as, se usar\'a la notaci\'on $(\cdot)^+=max(\cdot,0)$.
+
+\smallskip\noindent
+La funci\'on coste que se pretende minimizar depende del vector  $Q=(Q_1,\ldots,Q_T)$ y se puede definir como:
+
+\begin{equation}
+\label{eq:obj}
+f(Q)=\sum_{t=1}^T \left(C(Q_t) + E\left(h\sum_{j=1}^{J-1} \boldsymbol{I}_{jt}  +w\boldsymbol{I}_{Jt}\right)\right),
+\end{equation}
+siendo
+\begin{equation}
+\label{eq:proc}
+C(x) = k+cx, \ \ \text{if} \ \ x>0,\ \text{and}\ \ C(0)=0
+\end{equation}
+El nivel de inventario para cada periodo $t=1,\ldots,T$  y cada edad $j$ siguiendo la regla FIFO puede calcularse como sigue: % en (\ref{eq:invWaste}) (\ref{eq:inv2}) y (\ref{eq:inv1}).
+
+\begin{equation}
+\label{eq:invWaste}
+\boldsymbol{I}_{jt}=
+\begin{cases}
+\left(Q_t - (\boldsymbol{d}_t-\sum_{j=1}^{J-1}\boldsymbol{I}_{j,t-1})^+\right)^+ & j=1,\\
+(\boldsymbol{I}_{J-1,t-1} - \boldsymbol{d}_t)^+ & j=J, \\
+\left(\boldsymbol{I}_{j-1,t-1} - (\boldsymbol{d}_t-\sum_{i=j}^{J-1}\boldsymbol{I}_{i,t-1})^+\right)^+ & otro \ j%1<j<J
+\end{cases}
+\end{equation}
+
+
+Por otra parte, la restricci\'on del nivel de servicio puede expresarse como:
+\begin{equation}
+\label{eq:chance}
+E \left(\boldsymbol{X}_t\right) \le (1-\beta) \mu_t, \ t=1,\ldots,T
+\end{equation}
+
+Para controlar el cumplimiento de esta restricci\'on es necesario calcular las ventas perdidas que se producen en cada periodo $t$, lo cual viene dado por:
+%
+\begin{equation}
+\label{eq:lostsales}
+\boldsymbol{X}_t=\left(\boldsymbol{d}_t-\sum_{j=1}^{J-1}\boldsymbol{I}_{j,t-1}-Q_t\right)^+
+\end{equation}
+%
+El valor esperado de las ventas perdidas es una funci\'on conocida como \emph{loss-function} que en general no admite una expresi\'on en t\'erminos elementales. Algunas aproximaciones factibles pueden verse en \cite{kurawarwala96,Rossi14,DeSchrijver20121375,Waissi199691}.
+Para nuestro modelo hemos decidido utilizar la simulaci\'on Monte-Carlo para obtener una estimaci\'on de la \emph{loss-function}.
+Con las condiciones impuestas, el problema de encontrar las cantidades de producto perecedero que se deben producir en cada periodo y que minimizan la funci\'on coste $f(Q)$ dada en (\ref{eq:obj}), y con ello la pol\'itica $Y\in \{0,1\}^T$ de periodos de pedido \'optima, es un problema MINLP. Como veremos, la t\'ecnica usada presenta caracter\'isticas adecuadas para su implementaci\'on en computadores  de alto rendimiento.
+
+
+
+\section*{Resumen del cap\'itulo \ref{Chap:jpdc}}
+El objetivo de este cap\'itulo consiste en determinar hasta que punto el uso de una arquitectura heterog\'enea (multicore-multiGPU) facilita la resoluci\'on de un problema de optimizaci\'on del control de inventarios de productos perecederos. Pretendemos aprovechar la capacidad computacional de estas arquitecturas para obtener soluciones mas exactas, para ejemplos mas pesados desde el punto de vista de la computaci\'on, manteniendo tiempos de respuesta aceptables. El problema del control de inventarios queda definido a lo largo de una serie finita de $T$ periodos de tiempo en los que se ha de satisfacer la demanda (estoc\'astica) de un determinado producto perecedero que desde que se produce tiene una vida \'util de $J$ periodos. En el modelado de este problema se supone que la distribuci\'on se realiza siguiendo la pol\'itica de distribuci\'on FIFO, entregando el producto demandado con mayor  antigüedad. Se supone, adem\'as, que la demanda que no se satisfaga en un periodo queda perdida, no pudi\'endose acumular al periodo siguiente. La soluci\'on a este problema consiste en encontrar que cantidades de pedido a lo largo de todos los periodos resulta \'optima, en el sentido de minimizar el coste asociado a la producci\'on, distribuci\'on, almacenamiento y desecho de los productos que sobrepasen su vida \'util.
+
+Actualmente, las arquitecturas de computaci\'on de altas prestaciones m\'as extendidas son las plataformas heterog\'eneas basadas en sistemas de
+memoria distribuida, donde cada nodo tiene una arquitectura multicore que podr\'ia albergar un n\'umero distinto de cores~\cite{Hennessy12}. Por lo tanto, las implementaciones paralelas tienen que ser adaptadas para poder ser ejecutadas en dichas arquitecturas heterog\'eneas. En este contexto, es necesario tener un conocimiento detallado tanto del algoritmo a paralelizar como de los recursos computacionales que se van a utilizar para la implementaci\'on~\cite{Lastovetsky12}. Adem\'as, a estas arquitecturas se les pueden incorporar aceleradores, como son FPGAS, GPUs, coprocesadores Intel Xeon Phi, etc.
+En concreto, en el problema del control de inventario para productos perecederos se ha optado por la combinaci\'on de cl\'usteres de Multi-GPUs. De este modo, el uso de plataformas masivamente paralelas (GPUs) permite la aceleraci\'on de las tareas computacionalmente m\'as costosas, porque estas unidades tienen mucha potencia de c\'alculo para los esquemas de computaci\'on vectorial. De forma adicional, el uso de plataformas de memoria distribuida permite obtener unos resultados m\'as precisos debido a que el uso de computaci\'on paralela permite incrementar el n\'umero de simulaciones realizadas para resolver un caso particular sin que el tiempo de ejecuci\'on se incremente.
+
+El modelo de computaci\'on paralela asociado a este problema se puede  describir en t\'erminos de un conjunto de tareas que no presentan dependencias entre s\'i. Sin embargo, la carga computacional de cada una de estas tareas es variable y por lo tanto pueden aparecer problemas de desbalanceo de la carga si se hace un reparto de la carga a ciegas. Este problema de asignaci\'on de tareas a elementos de procesamiento se conoce en la literatura de complejidad como problema de Bin packing~\cite{Garey:1979:CIG:578533}. Dado que es un problema NP-Completo, se han desarrollado varias heur\'isticas que permiten tener una soluci\'on en un tiempo razonable.
+
+
+El orden de complejidad del problema, partiendo del algoritmo secuencial, est\'a relacionado con el n\'umero vectores $Y$ (que indica los periodos en los que se realiza un pedido) posibles, lo cual depende de los valores de $J$ y $T$. Independientemente del valor de $J$, el n\'umero de casos posibles a tratar aumenta de forma exponencial con el valor de $T$, es decir, $O(e^T)$. M\'as a\'un, la complejidad para hallar las cantidades \'optimas de cada vector $Y$ depende del n\'umero de veces que es necesario recurrir a simulaci\'on de Monte Carlo, limitada a $T$ en cada caso. Cada vez que se realiza la simulai\'on, el inventario y las ventas perdidas son calculadas para $N$ casos independientes. Por tanto, el orden de complejidad para el m\'etodo completo, es decir, hallar el vector de pedidos $Y$ \'optimo y las cantidades \'optimas de pedido, es aproximadamente del orden de $O(N \cdot T \cdot e^T)$.
+
+
+En la secci\'on anterior se ha puesto de manifiesto la necesidad de realizar simulaciones para obtener aproximaciones de la funci\'on \emph{floss}.
+Esta funci\'on es la que consume la mayor parte del tiempo computacional de la ejecuci\'on del problema de inventarios.
+Es importante destacar  la necesidad de realizar un elevado n\'umero de simulaciones para que las aproximaciones que lleva a cabo la funci\'on \emph{floss} sean suficientemente exactas.
+Por tanto, para realizar aproximaciones relativamente precisas del valor de las ventas perdidas ($X$), es necesario realizar un  n\'umero $N$ de simulaciones del problema suficientemente alto, lo que constituye la verdadera carga computacional del problema. Como caso de estudio, se ha considerado un ejemplo del problema de control de inventarios en el que $T=15$ y $J=3$, que es bastante realista. Dicho ejemplo genera un total de 5768 vectores $Y$ posibles.
+
+
+
+
+Una vez analizada la estructura algor\'itmica del problema, pasamos a describir los detalles de las implementaciones que hemos llevado a cabo sobre
+ una arquitectura heterog\'enea formada por un cl\'uster de Multi-GPUs (multicores y dispositivos GPUs). El hecho de explotar una plataforma heterog\'enea de un cl\'uster tiene dos ventajas fundamentales: poder abordar la resoluci\'on de problemas de mayor tama\~no y reducir el tiempo de ejecuci\'on de un caso concreto. Las implementaciones consideradas en este trabajo han sido:
+
+\begin{itemize}
+	\item{MPI-PTHREADS:} Esta implementaci\'on obtiene el paralelismo de los procesadores multicore y de los nodos disponibles en el cl\'uster. Para ello, se utiliza programaci\'on basada en hebras~\cite{pthreads} y MPI~\cite{MPI}.
+	\item{Multi-GPU:} Esta implementaci\'on est\'a basada en el uso de GPUs para realizar las simulaciones de Monte-Carlo, las cuales son  la parte computacionalmente m\'as costosa del problema a resolver. Para ello, la interfaz de programaci\'on que se utiliza es CUDA.
+\end{itemize}
+
+
+Centrando nuestra atenci\'on en la implementaci\'on MPI-PTHREADS, se ha explotado el paralelismo en dos niveles: a nivel de nodo (memoria distribuida) y a nivel de multicore (memoria compartida).
+Por un lado, existen m\'ultiples formas de paralelizar rutinas en modelos de memoria compartida, aunque la librer\'ia est\'andar es Pthreads (POSIX threads). Pthreads provee un conjunto unificado de rutinas en una librer\'ia de C cuyo principal objetivo es facilitar la implementaci\'on de threads o hilos en el programa.
+Por otro lado, debido a su portabilidad, MPI ha sido el interfaz considerado para explotar el paralelismo a nivel de nodo.
+
+Partiendo del algoritmo de optimizaci\'on del problema de inventarios, se ha realizado una paralelizaci\'on h\'ibrida (MPI y Pthreads), en la cual el conjunto de vectores $Y$ que se van a evaluar en el problema de  optimizaci\'on son repartidos entre los procesadores de acuerdo a las heur\'isticas de balanceo de la carga propuestas. La evaluaci\'on de esta implementaci\'on se ha realizado en un cl\'uster Bullx y los resultados se describen en las figuras \ref{fig:MPIPthreadsorder} y \ref{fig:SpeedUpMPIPthread} del cap\'itulo \ref{Chap:jpdc}.
+
+
+ El reparto inicial de la carga de trabajo entre los procesadores disponibles puede considerarse como un problema de Bin packing con algunas restricciones. El problema de Bin packing se enmarca dentro de la optimizaci\'on combinatoria (NP-completo), y en nuestro caso se puede modelar de la siguiente forma: Dado un conjunto de $E$ ejecuciones independientes
+del Algoritmo~\ref{alg:optimalforY} (items), cada una de ellas con una carga computacional $0<w_i< B$ y dado un conjunto de $P$ procesadores (Bins), repartir las ejecuciones del algoritmo entre los procesadores de forma que la carga computacional m\'axima asignada a un procesador sea m\'inima (ver \cite{Garey:1979:CIG:578533} para una formulaci\'on general del problema de Bin packing).
+
+Debido a la dificultad de encontrar soluciones \'optimas para este tipo de problemas, habitualmente se utilizan t\'ecnicas heur\'isticas y metaheur\'isticas, que son capaces de encontrar una soluci\'on aceptable en un tiempo razonable. Algunas de estas heur\'isticas est\'an inspiradas en computaci\'on evolutiva~\cite{Blum:2003:MCO:937503.937505}.
+Para resolver el problema de balanceo de la carga que se ha modelado como un problema de tipo Bin packing, proponemos tres algoritmos heur\'isticos (H1, H2 y H3) para repartir la carga de trabajo (en nuestro caso, los posibles vectores $Y$) entre todos los elementos de procesamiento disponibles de forma que se minimice el tiempo de ejecuci\'on del problema de optimizaci\'on.
+
+\begin{enumerate}
+	\item (H1): Heur\'istica basada en Round Robin: Ordenando previamente, de mayor a menor, el peso de las tareas a asignar, estas se reparten entre los $P$ procesadores siguiendo el patr\'on $(1,\ldots,P,P,P-1,\ldots,1,1,\ldots)$
+	\item (H2): Heur\'istica basada en asignar sucesivamente los items $w_i$ al procesador  que menos carga de trabajo haya acumulado.
+	\item (H3): Similar a la heur\'istica H2, pero previamente ordenando los items de mayor a menor carga.
+\end{enumerate}
+
+Para valorar las heur\'isticas se han utilizado tres instancias del problema denominadas $\gamma_1$, $\gamma_2$ y U, en las que la carga computacional estimada que se asocia a cada vector $Y$ es diferente. ($\gamma_1$) y ($\gamma_2$) est\'an basadas en distribuciones gamma con par\'ametros de forma y escala (10,4) y (1,25), respectivamente, y (U) sigue una distribuci\'on uniforme con valores entre 0 y 100.
+
+
+
+
+Para medir el grado de balanceo de la carga asignada a cada procesador, se ha utilizado el coeficiente de Gini ($G$), ampliamente utilizado en el campo de la econom\'ia para medir el grado de desigualdad de la distribuci\'on de la riqueza en poblaciones~\cite{Gini0}. Este \'indice var\'ia entre 0 (equidad absoluta) y 1 (un solo individuo (procesador) posea toda la riqueza de la poblaci\'on (carga computacional)). $G$ se define como la media de la diferencia entre cada posible par de procesadores, divididos por su carga media. Para un n\'umero de ejecuciones $E$ asignadas a $P$ elementos de proceso, siendo $w_i$ la carga computacional asignada al procesador $i$, ordenadas de forma ascendente, $G$ se calcula como sigue:
+%
+\begin{equation}
+	G= \frac{2\sum\limits_{i=1}^{P} i \cdot w_i}{P\sum\limits_{i=1}^{P}w_i}-\frac{P+1}{P}
+\end{equation}
+%
+Gr\'aficamente, $G$ representa el ratio entre la diferencia del \'area rodeada por la l\'inea de uniformidad y la curva de Lorenz de la distribuci\'on, y el
+\'area triangular que hay debajo de la l\'inea de uniformidad.
+$G$ toma valores entre un m\'inimo de 0, cuando todos los procesadores tienen la misma carga, a un m\'aximo de 1, cuando todos los procesadores (excepto uno) tienen una carga de cero. Por lo tanto, cuando $G$ se acerca a 0 la carga est\'a bien balanceada, y cuando se acerca a 1 est\'a desbalanceada.
+
+
+
+
+En la Tabla~\ref{tab:heurperformance} se resume el comportamiento de las diferentes heur\'isticas a trav\'es del valor del coeficiente de Gini ($G$) para los ejemplos planteados (compar\'andolos con un reparto a ciegas. Claramente se demuestra en esta tabla que la heur\'istica H3 es, al menos, un orden de magnitud mejor que las heur\'isticas H1 y H2 y que el reparto aleatorio de las tareas entre los procesadores (HR) es al menos dos ordenes de magnitud peor que H3 y un orden de magnitud peor que H1 y H2. De los datos de la Tabla \ref{tab:heurperformance}, se concluye que la heur\'istica H3 es la que presenta mejores resultados, consiguiendo balancear la carga de forma casi exacta, por lo tanto esta es la heur\'istica que produce mejores tiempos de ejecuci\'on en la evaluaci\'on de las implementaciones paralelas del problema del control de inventarios.
+
+
+
+
+La versi\'on Multi-GPU se ha basado en la explotaci\'on de diversas GPUs para la paralelizaci\'on de las simulaciones del m\'etodo de Monte-Carlo, realizadas por la funci\'on \emph{flossGPU} (ver Algoritmo~\ref{alg:cuda}). Por una parte, cada una de las $N$ simulaciones son independientes entre s\'i. Al mismo tiempo, para el c\'alculo de todo el inventario de cada una de las posibles edades~(\ref{eq:invWaste}), este solo depende del inventario del periodo anterior. Por tanto, separando por periodos, un kernel de CUDA puede realizar en paralelo el c\'alculo de las $N$ simulaciones y, al mismo tiempo, la actualizaci\'on del inventario de $J$ edades diferentes. Por tanto, la computaci\'on que se realiza con la GPU es la simulaci\'on de Monte-Carlo. Al mismo tiempo, el modelo se ha implementado de forma que cada proceso MPI abre uno o dos hilos, que a su vez abren una o dos GPUs del nodo en el que se encuentra. Las tareas se reparten usando la heur\'istica (H3) entre las GPUs que se vayan a utilizar en cada caso.
+
+El Algoritmo~\ref{alg:cuda} resume el cambio realizado en el Algoritmo \ref{alg:simulation} para adaptarlo a su ejecuci\'on en una o varias GPU. Tal y como se ha mencionado, el bucle que recorre los periodos se sit\'ua en el primer nivel.
+
+
+Para la evaluaci\'on de las implementaciones paralelas hemos utilizado un cl\'uster compuesto de ocho nodos Bullx R424-E3 Intel Xeon E5 2650 (cada uno con 16
+cores), interconectados por un puerto InfiniBand QDR/FDR embebido en la placa madre,
+ 8-GB RAM y 16-GB SSD) con ocho GPUs TeslaM2075 (de los ocho nodos, cuatro de ellos tienen dos GPUs por nodo). El driver de CUDA que se ha utilizado es CUDA 6.5. La arquitectura Multi-GPU y las caracter\'isticas de las GPUs se muestran en la Figura \ref{Tab:charGPU}.
+
+
+En cuanto a la paralelizaci\'on MPI-PTHREADS, en la Figura \ref{fig:SpeedUpMPIPthread} se puede apreciar un buen nivel de speed-up. La rapidez con la que las heur\'isticas se ejecutan las hace apropiadas incluso para problemas en los que el desbalanceo no es muy acusado, mejorando un reparto aleatorio de las tareas. Para casos en los que el desbalanceo es mucho mayor (ejemplos con las distribuciones gamma y uniforme) el beneficio es mucho mayor y se observa que la heur\'istica (H3) presenta mejores resultados.
+
+Con respecto a la implementaci\'on Multi-GPU, en la Tabla~\ref{tab:GPU} se recogen los tiempos de ejecuci\'on del problema completo, tomando hasta las 8 GPUs existentes en el cl\'uster para la paralelizaci\'on del m\'etodo Monte-Carlo en CUDA. En dicha tabla se aprecia como se pueden conseguir buenos resultados paralelizando una escasa porci\'on del c\'odigo. En cambio, al usar m\'ultiples GPUs, la escalabilidad est\'a penalizada por el tiempo de inicializaci\'on de las GPUs (aproximadamente 5 segundos), lo cual hace que no se obtenga un buen rendimiento con m\'as de 2 GPUs para este ejemplo concreto. Para el ejemplo de inventarios considerado, el uso de los diecis\'eis cores de un solo nodo resulta m\'as beneficioso que el uso de las dos GPUs disponibles. En definitiva, la escalabilidad con el uso de m\'ultiples GPUs se ve limitada por el tiempo de inicializaci\'on requerido, aunque podr\'ia ser beneficiosa en comparaci\'on con la paralelizaci\'on MPI-PTHREADS si el problema a tratar requiere  m\'as precisi\'on, siendo necesarias m\'as simulaciones del m\'etodo de Monte-Carlo, de forma que el tiempo de inicializaci\'on de las GPUs se hiciera comparativamente irrelevante.
+
+
+\section*{Resumen  del cap\'itulo \ref{Chap:ijpr}}
+
+Mientras que en el cap\'itulo \ref{Chap:iccsa2015} se describ\'ia un problema de control de inventarios para productos perecederos y un m\'etodo para encontrar su soluci\'on \'optima, el cap\'itulo \ref{Chap:jpdc} explotaba el uso de computaci\'on paralela en plataformas heterog\'eneas basadas en sistemas de memoria distribuida para acelerar la resoluci\'on del problema. No obstante, dicho m\'etodo se ve limitado por el hecho de incrementar, de forma exponencial, el c\'omputo necesario para hallar la soluci\'on \'optima seg\'un aumenta el n\'umero de periodos del problema.
+
+En este cap\'itulo se proponen heur\'isticas que encuentran soluciones cuyo coste, de media, es solo un 5\% superior a al \'optimo. M\'as en concreto, este cap\'itulo realiza las siguientes contribuciones a la literatura de control de inventarios no perecederos con demanda estoc\'astica y no estacionaria:
+
+\begin{itemize}
+	\item Se introducen expresiones anal\'iticas exactas para realizar el c\'alculo  del valor esperado de inventario de diferentes edades cuando el producto puede envejecer indefinidamente; estas expresiones sirven tanto para distribuciones discretas como continuas para la demanda.
+	\item Se derivan aproximaciones anal\'iticas para el caso en el que la edad l\'imite de los productos es discreta y finita.
+	\item Utilizando estos resultados, se propone una extensi\'on de la heur\'istica de Silver\citep{citeulike:7292564} para el caso concreto de productos perecederos; en particular introduciomos una variaci\'on anal\'itica y otra basada en simulaci\'on para el procedimiento.
+	\item Se realiza un estudio computacional con un extenso conjunto de datos que prueban que las heur\'isticas propuestas encuentran soluciones cuyo coste, de media, es solo un 5\% superior al \'optimo.
+\end{itemize}
+
+En este caso consideramos un problema de producci\'on de un \'unico producto, una \'unica localizaci\'on de suministro y una planificaci\'on de producci\'on sobre un horizonte de $T$ periodos. El producto considerado es perecedero y su edad, en periodos, se denota por  $a\in \{1,\ldots,A\};$ $a=1$ denota los productos nuevos reci\'en llegados al principio del periodo actual. Al final de un periodo dado $t$, todos los productos de edad $A$ son descartados; consideraremos $A<T$ para asegurar que el car\'acter perecedero de los productos afecta al modelo.
+
+La demanda es estoc\'astica y no estacionaria, es decir, su distribuci\'on var\'ia entre periodos. La demanda en el periodo $t$ es una variable aleatoria no negativa $D_t$ con funci\'on de distribuci\'on conocida $F_t$. La distribuci\'on de estas variables aleatorias se supone independiente entre los periodos. Los productos se distribuyen siguiendo la regla FIFO. La demanda que no pueda satisfacerse no se considera perdida en este caso, sino que es satisfecha en el periodo siguiente. Suponemos que el tiempo de entrega de los productos es cero, aunque las heur\'isticas propuestas pueden adaptarse facilmente al caso en el que el tiempo de suministro es mayor.
+
+Existe un coste fijo por ordenar un pedido $o$ y un coste $v$ proporcional a la cantidad de pedido solicitada; un coste por almacenamiento $h$ por cada producto que es llevado de un periodo al siguiente, independientemente de su edad; se incurre un coste de penalizaci\'on $p$ por cada unidad de demanda no satisfecha en cada periodo; un coste de desecho $w$ por cada producto de edad $A$ que sea descartado al final de cada periodo. El objetivo es encontrar una pol\'itica de suministro que minimice el coste total esperado, que est\'a compuesto por los costes de pedido, los costes de almacenamiento y los costes de penalizaci\'on y desecho, a lo largo del horizonte de $T$ periodos planificado.
+
+Consideremos el inventario neto como el inventario almacenado menos la posible cantidad de demanda no satisfecha. El modelo supone que los eventos en cada periodo se suceden como se describe a continuaci\'on. Al comienzo de un periodo el inventario de distintas edades es observado. Si es necesario se produce un pedido de producto por la cantidad deseada. Tras esto, la demanda es observada y los niveles de inventario son actualizados siguiendo la regla FIFO. Tras esto, los productos de edad $A$ que queden en stock son descartados y se incurre un coste de desecho por ellos. Si por el contrario el inventario neto fuese negativo se incurre un coste de penalizaci\'on por la demanda no satisfecha. La Tabla \ref{tab:notation} del cap\'itulo \ref{Chap:ijpr} recoge la notaci\'on de par\'ametros y otras variables usada durante este cap\'itulo.
+
+Los lemas \ref{lem:lemma1IJPR}-\ref{lem:lemma5IJPR} del cap\'itulo \ref{Chap:ijpr} muestran como obtener expresiones anal\'iticas para la esperanza de los diferentes niveles de inventario para el caso en el que el producto pueda envejecer indefinidamente. Esto sirve de base para obtener aproximaciones anal\'iticas para el caso de productos perecederos.
+
+Nuestra heur\'istica hace uso de estos resultados para calcular, dado un inventario inicial $\mathbf{I}_{t-1},$ los niveles de inventario $\mathrm{E}(\mathbf{I}_t)$ durante el ciclo $t\in\{t,\ldots,r\}.$ Usando el lema \ref{lem:convexity} calcula la cantidad de pedido \'optima  $Q_t$ para el ciclo $(t,r)$ as\'i como la esperanza de los costes totales por periodo.
+
+Como en la heur\'istica de Silver, se incrementa el valor de $r,$ empezando por $t,$ hasta que la esperanza de los costes totales por periodo asociados al ciclo $(t,r)$ aumenta por primera vez. Sea $r+1$ tal valor. La acci\'on \'optima en el periodo  $t$ es pedir una cantidad $Q_t$ que minimiza la esperanza de los costes totales para el ciclo $(t,r).$ Un pseudoc\'odigo del algoritmo puede consultarse en el Algoritmo \ref{algorithm_1}.
+
+La tabla \ref{tab:pivot} muestra un resumen de los resultados obtenidos en nuestro estudio computacional. En dicha tabla se observa como la heur\'istica que hace uso de simulaci\'on se comporta, por lo general, mejor que la aproximaci\'on anal\'itica. No obstante, esta \'ultima es 10 veces m\'as r\'apida que la primera. De media, la heur\'istica anal\'itica encuentra soluciones cuyo coste es, de media, 5.96\% por encima del coste \'optimo para las 54 instancias, mientras que la heur\'istica que hace uso de simulaci\'on reduce esta diferencia al 4.76\%.
+
+
+\section*{Resumen de los cap\'itulos \ref{Chap:iccs2017} y \ref{Chap:ejor}}
+
+El problema de toma de decisiones para programar las operaciones de mantenimiento en parques e\'olicos marinos es tratado como un problema de cadena de suministro: la instalaci\'on requiere programar operaciones de mantenimiento y atender los fallos en turbinas durante el horizonte planificado. Una flota de embarcaciones tiene que ser seleccionada para realizar estas operaciones. Para este conjunto de problemas, las decisiones no son solo din\'amicas, sino que adem\'as se realizan bajo incertidumbre.
+
+El problema de la planificaci\'on del mantenimiento de un parque e\'olico marino mediante una flota de embarcaciones propuesto en los cap\'itulos \ref{Chap:iccs2017} y \ref{Chap:ejor} est\'a basado en un modelo descrito en \cite{Elin}. El prop\'osito es encontrar la flota \'optima de embarcaciones y una colecci\'on de actividades de mantenimiento en las turbinas e\'olicas. El modelo contiene una descripci\'on detallada de la planificaci\'on de las operaciones relativas a cada acci\'on individual.
+
+Se consideran actividades de mantenimiento preventivas y correctivas. Las actividades preventivas son aquellas que est\'an destinadas a prolongar la vida \'util de las turbinas e\'olicas y a prevenir fallos. Las actividades correctivas son aquellas destinadas a resolver fallos en las turbinas. Existe una corresponcencia biun\'ivoca entre los posibles fallos en las turbinas y los tipos de actividades correctivas del modelo.
+
+El n\'umero de actividades preventivas de cada tipo que debe ser realizado durante la planificaci\'on temporal est\'a predefinido de antemano y este tipo de actividades pueden realizarse en cualquier periodo siempre que las condiciones meteorol\'ogicas lo permitan. Sin embargo, las actividades correctivas solo pueden realizarse desde el periodo en el que un determinado fallo ocurrre en una turbina e\'olica. Los fallos en turbinas se presentan por escenarios. Existe un coste por inactividad relativo a la p\'erdida de producci\'on energ\'etica en las turbinas durante la ejecuci\'on de cualquier tipo de actividad de mantenimiento. Asimismo, se consideran costes por inactividad para las turbinas averiadas, que se incurre hasta que se produce la reparaci\'on.
+
+Para realizar las actividades de mantenimiento es necesaria una flota de embarcaciones. Los diferentes tipos de embarcaciones tienen propiedades como la clase de actividades que pueden realizar, capacidad para transportar a los t\'ecnicos, un coste de depreciaci\'on anual, una determinada velocidad de crucero y un l\'imite para el nivel de velocidad del viento y oleaje para los que es seguro navegar. Cada embarcaci\'on est\'a asociada a una base, desde la que viaja al parque e\'olico para realizar las actividades. Cada base tiene una determinada capacidad de embarcaciones, t\'ecnicos, un coste asociado y el valor de la distancia hacia el parque e\'olico.
+
+El problema de decisi\'on incluye un n\'umero de bases posibles y un n\'umero de tipos de embarcaciones asociadas a ellas. Cada tipo de embarcaci\'on es capaz de realizar un determinado conjunto de patrones de actividades de mantenimiento desde la base a la que est\'a asociada. Un patr\'on consiste en una o varias actividades de mantenimiento que ser\'an realizadas en el parque e\'olico durante un periodo, incluyendo el tiempo que conlleva realizar un viaje de ida y vuelta de la base al parque e\'olico. En cada periodo las embarcaciones disponibles pueden realizar un patr\'on de los disponibles asociados al tipo de embarcaci\'on y a la base. Algunos patrones de distintas embarcaciones y asociados a distintas bases pueden ser virtualmente los mismos, conteniendo la misma lista de actividades a ser realizadas durante el periodo. El coste y el tiempo puede variar, considerando la velocidad de crucerod e cada embarcaci\'on o la distancia entre la base y el parque. Algunos tipos de actividades no requieren que la embarcaci\'on est\'e presente durante la actividad. Esto permite que varias actividades puedan ser ejecutadas paralelamente en un mismo periodo. Es irrelevante si un patr\'on contiene actividades que pueden ejecutarse en paralelo o no, siempre y cuando cumplan con las restricciones de tiempo durante un periodo y la embarcaci\'on permita transportar al n\'umero necesario de t\'ecnicos para realizar todas las actividades. M\'as a\'un, algunos tipos de actividades pueden llevar m\'as del tiempo disponible en un periodo. Estos tipos son cortados en peque\~nas partes que puedan ser realizadas durante los periodos. Si una actividad larga es iniciada en un determinado periodo, no es necesario que sea continuada en los siguientes. Sin embargo, para actividades de tipo correctivo, los costes por inactividad son incurridos en todos los periodos hasta que la actividad es finalizada y la turbina queda reparada.
+
+Las decisiones del modelo tienen lugar en dos niveles: en un primer nivel (t\'actico) se deciden las bases y las embarcaciones que van a ser usadas durante la planificaci\'on temporal. El segundo nivel (operacional) programa las operaciones, incluyendo los patrones que realizar\'a cada embarcaci\'on disponible durante cada uno de los periodos. Los eventos aleatorios incluyen las condiciones meteorol\'ogicas que pueden prevenir el uso de las embarcaciones y los posibles fallos en turbinas que tienen lugar durante la planificaci\'on.
+
+La formulaci\'on matem\'atica del modelo del cap\'itulo \ref{Chap:iccs2017} se encuentra recogida en la secci\'on \ref{sec:mathematicalformulationICCS}. Esta formulaci\'on matem\'atica no incluye las restricciones meteorol\'ogicas que prev\'en el uso de embarcaciones. Es en el cap\'itulo \ref{Chap:ejor} en la secci\'on   \ref{sec:mathematicalformulation} donde la formulaci\'on matem\'atica del problema MILP (Mixed Integer Linear Programming) es refinada, incluyendo estas nuevas restricciones. Del mismo modo, el cap\'itulo \ref{Chap:ejor} incluye, en la secci\'on \ref{subsec:buildpatterns}, una descripci\'on de los algoritmos recursivos usados para generar autom\'aticamente todos los patrones posibles para cada combinaci\'on de base y tipo de embarcaci\'on considerando las restricciones del problema.
+
+El cap\'itulo \ref{Chap:ejor} incluye una heur\'istica para la fase operacional del modelo. Esta heur\'istica no realiza anticipaci\'on sobre los eventos aleatorios como la formulaci\'on MILP y es por tanto m\'as realista. En resumen, la heur\'istica consiste en un planificador de tareas que observa, al comienzo de cada periodo, los eventos de los nuevos fallos en turbinas y las condiciones meteorol\'ogicas. En funci\'on de ellos, toma decisiones sobre las embarcaciones a usar durante cada periodo y los patrones a realizar. Para ello, eval\'ua cada una de las posibles decisiones seg\'un una funci\'on de fitness y selecciona las decisiones de menor coste, incluyendo el estado ocioso de las embarcaciones.
+
+%\section*{Agradecimientos}
+%Alejandro G. Alcoba es becario del programa FPI. Este trabajo ha sido financiado por el Ministerio de Ciencia (TIN2012-37483) y la Junta de Andaluc\'ia (P11-TIC7176), parcialmente financiados por el Fondo Europeo de Desarrollo Regional (FEDER).
+
+
+%\bibliographystyle{Jornadas}
+%\bibliography{bibInventory}
+
+
+
+%\end{document}
+

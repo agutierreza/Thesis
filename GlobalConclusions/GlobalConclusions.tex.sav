@@ -1,0 +1,127 @@
+
+% this file is called up by thesis.tex
+% content in this file will be fed into the main document
+
+\chapter{Contributions and future work} % top level followed by section, subsection
+
+
+% ----------------------- paths to graphics ------------------------
+
+% change according to folder and file names
+\ifpdf
+    \graphicspath{{8/figures/PNG/}{8/figures/PDF/}{8/figures/}}
+\else
+    \graphicspath{{8/figures/EPS/}{8/figures/}}
+\fi
+
+% ----------------------- contents from here ------------------------
+
+In this thesis, several computational issues related to the resolution of linear systems of equations
+which come from the discretization of physical models described by
+means of Partial Differential Equations (PDEs) have been discussed.
+We started from the algebraic description of the model
+associated to the physical phenomena and our contributions have been focused
+on the design of techniques and computational models that allow the
+resolution of these linear systems of equations. To be more specific, our interest
+has been  specially focused on the study of models which require a high level of discretization
+and usually the matrix $A$ involved in the system is very large and sparse (very low percentage of nonzero elements). One of the major contributions of this
+thesis is the implementation of routines to solve sparse linear systems of
+equations using High Performance Computing (HPC). More concretely, routines which require of the exploitation
+of Graphics Processing Units (GPUs) and multi-GPU clusters have been implemented.
+
+%Chapter 2. SpMM.
+In order to compute the Sparse matrix
+matrix product (SpMM) on GPU platforms, a strategy called FastSpMM has been proposed. It has been evaluated and compared
+to another algorithm described in literature, i.e. the CUSPARSE library (supplied by NVIDIA). Results have shown that FastSpMM
+outperforms the existing approaches because it combines the use of the ELLPACK-R
+storage format with the exploitation of the high ratio computation/memory access of
+the SpMM operation and the overlapping of CPU-GPU communications/computations
+by CUDA streaming computation. Our next work in this research line will consist
+of extending FastSpMM to matrices with complex elements,
+broadening the kinds of platforms which can be exploited by FastSpMM. Moreover, we
+are particularly interested in the reduction of the Processing Time through improving
+the memory management. In order to achieve this goal, FastSpMM will be re-written
+according to the GPU programming tool CudaDMA.
+Additionally, the implementation of the multi-GPU version of FastSpMM is also a future line to work on.
+
+
+%Chapter 3. JoS.
+Besides, a BCG implementation to solve complex
+and/or nonsymmetric linear systems of equations on GPUs has been carried out ($CuBCG_{ET}$).
+After an extensive experimental evaluation using two sets of representative test matrices, it can be
+concluded that $CuBCG_{ET}$ clearly achieves better performance that other approaches in the literature. This is mainly due to the fact that the
+kernel ELLR-T can be better adapted to a wide variety of sparse matrices patterns. The analysis has shown that despite 
+the inner products in the BCG algorithm represent a small percentage of the total workload, their poor 
+ performance on GPUs has a strong impact on the performance of the
+BCG.  
+
+
+Therefore, in our future work, we plan to follow the methodology described in Chapter~\ref{Introduction}, Section~\ref{krylov}, with the objective of expressing every iteration of the BCG with the fusion of kernels.
+
+
+%Chapter 4. Helmholtz
+Besides, a solution for the 3D Helmholtz
+equation which combines the exploitation of the high regularity of
+the matrices involved in the numerical methods and the massive
+parallelism supplied by heterogeneous architecture of modern
+multi-GPU clusters has been developed. This parallel approach (called Fast-Helmholtz)
+not only allows to obtain the solution faster, but also to solve larger size instances.
+According to experimental results, several aspects
+can be still improved, so our future
+work will be focused on them specifically. The difficulty of having the workload well-balanced is related
+to the appropriate distribution of the workload between the CPU and GPU processes,
+so our current on-going work involves to automatize the benchmarking
+process to determine the most suitable factor $F$ to exploit the specific architecture
+considered. Furthermore, another future work will be focused on the
+development of a hybrid version MPI-OpenMP on the hybrid multi-GPU cluster.
+{\color{black}Apart from that, in order to increase the flexibility of the implementation, we also plan to use  rCUDA. This virtualization framework allows the execution of GPU-accelerated applications within virtual machines (VMs), enabling share a pool of centralized GPU resources that reside externally to the compute nodes.}
+
+%improvements related to communication penalties will also be considered because of their strong relevance to the efficiency of applications running on multi-GPU clusters, i.e. the use of rCUDA interface.
+
+
+Regarding this first part of the thesis related to the resolution of large and sparse linear systems of equation, there are several research issues that we believe to be worth exploring in the future. One of them is the development of new routines for solving some of the most used routines in the resolution of real problems in several fields. This way, the creation of an efficient library capable of improving the performance of other presented in the literature will be available for the scientific community. Moreover, to observe the evolution in their performance, we plan to implement some of these routines in many-core architectures such as the new GPU generations and Xeon Phi coprocessors.
+
+%Chapter 5. Zaragoza.
+The second part of this thesis has been focused on the resolution of a real physical problem of the
+Optical Diffractional Tomography (ODT) based on holographic information
+which allows the extraction of the shape of the objects with a high accuracy
+and with a non-damaging technique. To be more specific, a three dimensional non-linear ODT model (named NLODT-P) to locate
+particles, as part of a fluid velocimetry technique has been implemented using MATLAB interface in combination with GPU devices.
+We have presented some numerical
+experiments to illustrate some circumstances when an image post-processing,
+such as a matched filter, could be enough to unravel the linear ODT image, and when
+an iterative optimization such as NLODT-P will be compulsory. In the future, we plan to solve
+real problems of HPIV
+in aneurysms models where locating hundreds of particles will
+be needed. Thus, dimensions will range from $500^3$ to $2000^3$
+for $Vol$. In this case, MPI programming will be required for distributing the fields
+among the available architectures.
+
+%Additionally, we plan to solve xxx.
+%
+%We also plan to xxx.
+
+
+%Regarding the three dimensional non-linear ODT model, there are several research issues that we believe to be worth
+%exploring in the future. One of them is xxx. Moreover, xxx.
+%
+%
+%From the high performance computing perspective, there are many aspects that
+%have not been sufficiently analyzed. In particular, we are interested in the projection
+%of our proposed algorithms on heterogeneous environments.
+
+
+
+% ---------------------------------------------------------------------------
+%: ----------------------- end of thesis sub-document ------------------------
+% ---------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+

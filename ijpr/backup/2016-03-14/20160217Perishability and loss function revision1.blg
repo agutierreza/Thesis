@@ -1,0 +1,47 @@
+This is BibTeX, Version 0.99d (TeX Live 2015)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: 20160217Perishability and loss function revision1.aux
+The style file: tPRS.bst
+Database file #1: publications.bib
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+You've used 25 entries,
+            3635 wiz_defined-function locations,
+            909 strings with 12039 characters,
+and the built_in function-call counts, 19061 in all, are:
+= -- 1597
+> -- 1001
+< -- 3
++ -- 482
+- -- 276
+* -- 1417
+:= -- 2818
+add.period$ -- 96
+call.type$ -- 25
+change.case$ -- 176
+chr.to.int$ -- 26
+cite$ -- 25
+duplicate$ -- 1360
+empty$ -- 1331
+format.name$ -- 341
+if$ -- 3842
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 272
+newline$ -- 123
+num.names$ -- 104
+pop$ -- 657
+preamble$ -- 1
+purify$ -- 168
+quote$ -- 0
+skip$ -- 563
+stack$ -- 0
+substring$ -- 889
+swap$ -- 745
+text.length$ -- 3
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 225
+warning$ -- 0
+while$ -- 153
+width$ -- 0
+write$ -- 340

@@ -1,0 +1,180 @@
+
+% this file is called up by thesis.tex
+% content in this file will be fed into the main document
+
+%: ----------------------- introduction file header -----------------------
+\chapter*{Glossary}
+\label{Chapter:Glossary}
+This glossary provides a list of the nomenclature and definitions of acronyms used in the thesis.
+
+
+API: Application Programming Interfaces
+
+ASIC: Application-Specific Integrated Circuit
+
+BLAS: Basic Linear Algebra Subprograms
+
+BCG: Biconjugate Gradient
+
+BCG-3DH: BiConjugate Gradient method solving the 3d Helmholtz equation
+
+BCGSTAB: BiConjugate Gradient Stabilized
+
+BS: Block Size
+
+CG: Conjugate Gradient
+
+CGM: Conjugate Gradient Optimization Method
+
+CGS: Conjugate Gradient Squared method
+
+COO: COOrdinate storage format
+
+CPU: Central processing Unit
+
+CRF: Compressed Regular Format
+
+CRS: Compressed Row Storage
+
+CUBLAS: Optimized BLAS for NVIDIA based GPU cards
+
+CUDA:  Compute Unified Device Architecture
+
+CULA: NVIDIA CUDA Linear Algebra library
+
+CUSP: NVIDIA CUDA sparse linear algebra and graph computations library
+
+CUSPARSE: NVIDIA CUDA Sparse Matrix library
+
+DRAM GDDR: DRAM Graphics Double Data Rate
+
+DP: Double Precision
+
+DSP: Digital Signal Processor
+
+FGMRES: Flexible Generalized Minimal Residual method
+
+FPGA: Field-Programmable Gate Array
+
+GMRES: Generalized Minimal Residual method
+
+GPU: Graphics processing Unit
+
+HPC: High Performance Computing
+
+HPIV: Holographic Particle Image Velocimetry
+
+ILP: Instruction Level Parallelism
+
+ISA: Instruction Set Architecture
+
+LAPACK: Linear Algebra PACKage
+
+MAGMA: Linear Algebra library for heterogeneous GPU-based architectures
+
+MATLAB: High-level language and interactive environment for computation
+
+MEX-file: MEX stands for MATLAB Executable
+
+MIMD: Multiple Instructions Multiple Data
+
+MISD: Multiple Instructions Single Data
+
+MKL: Math Kernel Library
+
+MPI: Message Passing Interface
+
+MPMD: Multiple Programs  Multiple Data
+
+MUMPS: MUltifrontal Massively Parallel sparse direct Solver
+
+NA: Numerical Aperture
+
+NUMA: Non-Uniform Memory Access systems
+
+ODT: Optical Diffraction Tomography
+
+OpenCL: Open Computing Language
+
+PDE: Partial Differential Equation
+
+PETSc: Portable, Extensible Toolkit for Scientific computation
+
+Pthreads: Posix Threads
+
+QCG: Quadratic Conjugate Gradient
+
+QMR: Quasi-minimal Residue
+
+SAXPY: Single-Precision A $\cdot$ X Plus Y
+
+SIMD: Single Instruction Multiple Data
+
+SISD: Single Instruction Single Data
+
+SIMT: Single Instruction, Multiple Threads
+
+SM-SIMD: Shared Memory SIMD
+
+SM-MIMD: Shared Memory MIMD
+
+SM: Streaming Multiprocessor
+
+SP: Single Precission
+
+SpMM: Sparse Matrix Matrix product
+
+SpMV: Sparse Matrix Vector Product
+
+SuperLU: Sparse Direct Solver
+
+TFLOPS: Tera Floating Point Operations per Second
+
+TFQMR: Transpose-free QMR
+
+UMA: Uniform Memory Access systems
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% ----------------------------------------------------------------------
+
+
+

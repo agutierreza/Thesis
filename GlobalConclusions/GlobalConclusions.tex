@@ -1,0 +1,57 @@
+
+% this file is called up by thesis.tex
+% content in this file will be fed into the main document
+
+\chapter{Conclusions} % top level followed by section, subsection
+\label{Chap:Contributions}
+
+% ----------------------- paths to graphics ------------------------
+
+% change according to folder and file names
+\ifpdf
+    \graphicspath{{8/figures/PNG/}{8/figures/PDF/}{8/figures/}}
+\else
+    \graphicspath{{8/figures/EPS/}{8/figures/}}
+\fi
+
+% ----------------------- contents from here ------------------------
+
+This chapter summarises the findings of the works presented in this thesis and shows guidelines for possible future research.
+
+We can distinguish two main areas of research in this thesis. The first one dealt with lot sizing problems for perishable items. The second, with the optimization of the maintenance processes at offshore wind farms. Each of them provided findings for the research questions investigated in this thesis, related to dynamic decision making.
+
+The first research question of this thesis is to study which order policies are the most appropriate for a general lot sizing problem for a perishable item. Can the optimal policy be found? Chapter \ref{Chap:iccsa2015} describes that problem and discusses a solution method. The model studied is a lot sizing problem for a single perishable item following a static strategy over a finite time horizon and considering ordering, holding, unit and waste costs. Demand is stochastic and non-stationary, a $\beta$-service level for the demand is considered and a FIFO issuing policy is followed. For this problem setting theoretical properties were derived of the optimal solution aiding a possible solution approach. Moreover, a specific algorithm exploiting these properties has been developed to find an YQ policy derived for the static-dynamic case, using Monte Carlo simulation to estimate the expected value of the inventory levels. This policy proved to be optimal for the static-dynamic case. By enumerating the feasible timing order policies, the optimal solution for the static strategy can be found by finding the optimal quantities for each replenishment schedule. 
+
+However, this solution method requires a high computational demand due to the Monte Carlo simulation and enumeration of replenishment schedules. This led to a new research question: How can the use of parallel computing improve the performance of the algorithms to find solutions for the problem? 
+
+Two implementations were developed for heterogeneous platforms: a multi-GPU version using CUDA and a multicore version using Pthreads and MPI. For the multi-GPU version, the Monte Carlo simulation (the most demanding task of the solution method) was parallelised using the CUDA interface. For the multicore version, the initial approach for a multi-core parallelisation suggested an embarrassingly parallel implementation, as finding the optimal quantities for each replenishment schedule are in fact independent subproblems. However, randomly dividing the workload among processors led to an unbalanced workload for the processors. The reason behind this is that, rather than using Monte Carlo, an exact analytical approach to calculate the inventory levels for a cycle can be followed for the periods in which the inventory levels are equal to zero. Calculating the order quantities for a cycle analytically is much faster than using Monte Carlo simulation, even when using small samples. After identifying the computational workload of each replenishment schedule subproblem, balancing the workload among processors resembles a bin-packing problem. Three fast heuristics with reduced overhead were proposed for the bin-packing problem. The one that procured the best balancing in the testbed was used for parallelising the multicore version of the lot sizing problem.
+
+The last research question concerning lot sizing problems involved considering the use of heuristics for such problems: to which extend does the use of heuristics give good results in a DDM lot sizing problem for perishable products? In this case, a similar lot sizing model was used. The difference with the former studied model is to use a penalty cost for unfulfilled demand, rather than using a $\beta$-service level and allowing backordering. For this model, exact analytical expressions to compute the expected value of the inventory for different product ages were found, assuming the product can age indefinitely. This derived an analytical approximation for the inventory levels for the case in which the product age is discrete and finite. From here, an extension of Silver's heuristic has been developed for the case of perishable products, introducing an analytical and a simulation-based variant of the approach. An SDP model for the problem was derived as well, in order to compare the optimal solution with the heuristic. Results showed that the simulation approach featured an average cost performance only 5\% above the optimal cost. For the analytical approximation this figure was 6\%.
+
+
+%\item Is it possible to find an efficient and realistic metaheuristic for scheduling O\&M activities at offshore wind farms with failures and weather uncertainty? What are the differences with a perfect information MILP model?
+
+A second practical dynamic decision making problem was studied for continuing the research in this thesis. The topic was related to optimising the maintenance activities at a OWF. Chapters \ref{Chap:iccs2017} and \ref{Chap:ejor} address this problem. The first research question is addressed in Chapter \ref{Chap:iccs2017}: is an MILP model suitable for an application for selecting a fleet of vessels to support the maintenance at offshore wind farms? A discrete, scenario based and deterministic optimisation model was derived, presented as a bi-level problem: On the first level, decisions are made in order to select a fleet of vessels. On the second level, the fleet is used to optimise the schedule of O\&M activities at a OWF, dealing with turbine failure events and considering weather conditions that may prevent performing activities for safety reasons. The model solves instances of more than 700 periods (The planning horizon is set to one year, deciding activities in twelve hours shifts). However, such a model is based on perfect information for failure events and weather conditions, since adding non-anticipative constraints would leave the model unsolvable. Previous models in literature, aiming to solve long time horizon problems using small time periods (\cite{HALVORSENWEARE2013}, \cite{Stalhane2016357}) are deterministic as well. This situation set new research questions, as the vessel fleet composition may be affected when maintenance scheduling is done when the failures events and the weather conditions are uncertain. 
+
+The next research question was: Is it possible to find an efficient and realistic metaheuristic for scheduling O\&M activities at offshore wind farms with failures and weather uncertainty? What are the differences with a perfect information MILP model? Chapter \ref{Chap:ejor} discusses a heuristic that schedules the O\&M activities and shows to what extend a non-anticipative method affects the optimal solution. The experiments show that the optimal fleet composition given by the MILP model is not sufficient to operate the OWF efficiently using the heuristic. However, adding only an extra vessel provides a fair solution: the cost of performing the activities, which constitutes the major cost of operating the OWF and is not related with uncertain events, is only  6\% above the one provided by the MILP. In contrast, the cost associated with the downtime in turbines due to failure events, which are uncertain for the heuristic, are about three times higher than the given by the perfect information MILP model.
+
+
+
+%anticipative, as 
+
+%\subsection{Future research}
+%\label{subsec:futureresearch}
+
+% ---------------------------------------------------------------------------
+%: ----------------------- end of thesis sub-document ------------------------
+% ---------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+

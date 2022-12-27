@@ -1,0 +1,706 @@
+%\documentclass[12pt]{article}
+\documentclass{tPRS2e}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{a4paper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{epstopdf}
+\usepackage{color}
+\usepackage[linesnumbered, ruled]{algorithm2e}
+\usepackage{lscape}
+\usepackage{pgfplots}
+
+%\usepackage{algorithm}
+%\usepackage{algorithmic}
+
+
+\SetKwRepeat{Do}{do}{while}%
+%\usepackage{algorithmic}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\renewcommand{\d}[1]{\ensuremath{\operatorname{d}\!{#1}}}
+\newcommand{\blue}{\textcolor{blue}}
+\newtheorem{lem}{Lemma}
+\newtheorem{mydef}{Definition}
+
+\title{A simple heuristic for perishable item inventory control under non-stationary stochastic demand\thanks{This work is an extended version of \cite{citeulike:12592650}}}
+\author{Alejandro Gutierrez-Alcoba, Roberto Rossi, \\Belen Martin-Barragan, Eligius M. T. Hendrix}
+\date{}                                           % Activate to display a given date or no date
+
+\author{
+\name{
+Alejandro Gutierrez-Alcoba,\textsuperscript{a}$^{\ast}$\thanks{$^\ast$Corresponding author.}
+Roberto Rossi,\textsuperscript{b}
+Belen Martin-Barragan,\textsuperscript{b}
+Eligius M. T. Hendrix,\textsuperscript{a}}
+\affil{
+\textsuperscript{a}Computer Architecture, Universidad de M\'alaga, M\'alaga, Spain\\
+\textsuperscript{b}Business School, University of Edinburgh, Edinburgh, UK
+}
+\received{v1.0 released September 2015}
+}
+
+
+
+\begin{document}
+	\maketitle
+	
+	\begin{abstract}
+		In this paper we study the single-item single-stocking location non-stationary stochastic lot sizing problem for a perishable product. We consider fixed and proportional ordering cost, holding cost, and penalty cost. The item features a limited shelf life, therefore we also take into account a variable cost of disposal. We derive exact analytical expressions to determine the expected value of the inventory of different ages. We also discuss a good approximation for the case in which the shelf-life is limited. To tackle this problem we introduce two new heuristics that extend Silver's heuristic and compare them to an optimal Stochastic Dynamic Programming (SDP) policy in the context of a numerical study. Our results  demonstrate the effectiveness of our approach.
+	\end{abstract}
+		
+
+	\begin{keywords}
+		Stochastic models; Monte Carlo method; Silver's heuristic; perishable inventory control; 
+	\end{keywords}
+	\section{Introduction}
+	
+	
+	
+	According to the Food and Agriculture Organisation of the United Nations (FAO), around one third of the food that is produced worldwide for human consumption is lost or wasted every year; this amounts to about 1.3 billion tons per year. This loss can be translated into a waste of different valuable resources such as land, water or energy. For this reason, research in perishable item inventory control represents an area of increasing interest.
+	
+%\label{sec:literature}
+%\subsection{Lot sizing}
+	Lot sizing problems have been long and widely studied due to  their important role in economy. Dynamic lot sizing was first introduced by \cite{Wagner:dynamiclotsize}, who discuss a polynomial time exact solution method. Many efficient heuristics appeared over the years in the literature, see e.g. the linear time heuristic introduced in \cite{SilverMeal1973}.
+
+	Models considering uncertainty for the demand appeared later in the literature. \cite{citeulike:7292564} presented an heuristic that looks only one cycle ahead and that is based on three different stages: deciding when to order, the number of periods of the cycle and the order quantity. The heuristic introduced in \cite{Askin} determines the replenishment levels minimising the incurred cost per period. \cite{Bollapragada:1999} improve the latter both in cost and computational time.  \cite{BookbinderandTan} proposed a heuristic in which first the replenishment periods are decided and after that the quantities are fixed. In \cite{citeulike:12317242} an MILP \blue{(Mixed-Integer Linear Programming)} model is used to decide replenishment moments and quantities simultaneously; \blue{\cite{citeulike:13341691} generalise Tarim and Kingsman's model to handle a range of service level measures as well as lost sales. 
+\blue{\cite{doi:10.1287/opre.1110.1033} consider ordering policies for systems in which the fixed cost is dependent on the order size, in a step function for two or multiple values, deriving policies for these cases. \cite{doi:10.1287/opre.2013.1238} determine a joint ordering and dynamic pricing strategy for three different models and characterize the optimal policy when inventory cost-rate functions are convex or quasi convex. }	
+All aforementioned works operate under a non-stationary demand assumption; the importance of developing models that are able to compute optimal or near-optimal non-stationary policies has been discussed by \cite{citeulike:7928534}.}
+
+
+	
+%\subsection{Lot-sizing for perishable items}
+%	
+	A review of the early literature on lot sizing for perishable items is provided in \cite{citeulike:11825042}; it surveys ordering policies  from 1960 to 1982. \cite{citeulike:11825044} make an extensive review of more recent literature for perishable products with fixed or random lifetimes and considering both discrete and continuous models.  \cite{citeulike:10674763} review perishable models since 2001. 
+
+In lot sizing for perishable items the structure of the optimal replenishment policy is typically complex: the replenishment quantity depends on the individual age categories of current inventories and all outstanding orders; for this reason developing effective heuristic policies is of great practical importance in inventory systems for perishable items. According the the above reviews, over the last ten years several inventory models have been derived for controlling perishable item inventory systems. For instance, \cite{citeulike:6806835} present a model similar to  the one discussed in this paper dealing with a periodic review with service-level constraints; however the role of the fixed ordering cost is not considered in their work. More recently, \cite{citeulike:12534249} introduces an SDP approach for a single perishable item subject to non-stationary demand and an $\alpha$ service level constraint. 
+\blue{\cite{doi:10.1287/msom.2014.0488} apply multi-modularity to three dynamic inventory problems; they consider perishability in one of them, for clearance sales, following FIFO (first in, first out) issuance. \cite{doi:10.1287/opre.2014.1261} analize a joint pricing and inventory control problem for perishables, considering both backlogging case and lost-sales case; they allow that inventory can be discarded before it is perished.}	
+	\cite{citeulike:13666707} present an MILP approximation model for a YS policy --- \blue{in this policy $Y_t$ is an indicator variable that is set to one if there is a replenishment up to inventory level $S_t$ in period $t$} --- for an inventory control problem under $\alpha$ service level constraints, non-stationary demand and a single item with a fixed shelf life. \cite{GAlcoba:ICCSA2015} discuss an YQ policy --- \blue{in this policy $Y_t$ is an indicator variable that is set to one if there is a replenishment of size $Q_t$ in period $t$} --- for a similar setting in which, however, a service level constraint is imposed on lost sales. \cite{PaulsWorm2015} present an MILP approximation for a YQ policy obtaining costs that are less than 5\% higher than those of the optimal policy.
+	
+	This paper, which extends and complements the discussion of \cite{citeulike:12592650}, focuses on the case of a single perishable item with fixed shelf-life. We consider fixed and variable ordering costs as well as holding and penalty costs for backordered products; the demand is non-stationary over a finite set of periods; inventory is issued following the FIFO policy. A major difference with respect to \cite{citeulike:12592650} is the adoption of a penalty cost scheme in place of a service level constraint; furthermore, we present a broader set of instances and we assessed the quality of our new heuristics against optimal solutions obtained via stochastic dynamic programming.
+	
+%In particular, we extend the discussion of \cite{citeulike:12592650}, in which, rather than using penalty costs for backordered products, a service-level constraint was imposed on the inventory system. We present a broader set of instances solved by optimality by a stochastic dynamic programming model and we compare results against Silver's heuristic adapted for the case of perishable products.
+	
+We make the following contribution to the literature on perishable item non-stationary stochastic lot sizing.
+	\begin{itemize}
+		\item We introduce exact analytical expressions to compute the expected value of the inventory for different product ages in the case the product can age indefinitely; the expressions work under discrete as well as continuous demand distributions.
+		\item We derive an analytical approximation for the case in which the different product age is discrete and finite.
+		\item By using the former results, we extend Silver's heuristic, \cite{citeulike:7292564}, to the case in which the product is perishable; in particular we introduce analytical and simulation-based variants of the approach.
+		\item We conduct an extensive numerical study \blue{which demonstrates that our new heuristics lead to a cost that, on average, is below 5\% of the optimal cost.}
+	\end{itemize}
+	
+The rest of this work is structured as follows. %A literature survey on the subject is issued in Section \ref{sec:literature}. 
+\blue{Section \ref{sec:problemdescription} describes the problem setting and the stochastic dynamic programming model. Section \ref{sec:theoretical_results} discusses various theoretical results that are then employed, in Section \ref{sec:silversanalytic}, to develop an analytical extension of Silver's heuristic; moreover, in the same section we develop a more accurate but computationally less efficient heuristic approach. A computational study and its results are detailed in Section \ref{sec:computationalstudy}. Section \ref{sec:conclusions} draws conclusions.	}
+
+
+
+
+	
+	\section{Problem and model description}
+	\label{sec:problemdescription}
+	
+	We consider a single-item, single-stock location, production planning problem over a time horizon of $T$ periods. The product we consider is perishable and its age, in periods, is denoted by $a\in \{1,\ldots,A\}$; $a=1$ denotes fresh products delivered at the beginning of the current period. At the end of a given period $t$, all items of age $A$ are scrapped; \blue{we will consider $A<T$ to ensure that perishability has an effect in the model.}
+	
+	The stochastic demand we consider is non-stationary, which means its distribution varies from one period to the next. Demand in period $t$ is represented by means of a non-negative random variable $D_t$ with known cumulative distribution function $F_t$. Random demand is assumed to be independent over the periods. 	
+	The system operates under a FIFO product issuing policy. Unmet demand at any given period is backordered and satisfied as soon as a replenishment arrives. The sellback of excess stock is not allowed.
+	
+For ease of exposition, we assume that that delivery of products is instantaneous, i.e. lead time is zero; \blue{
+both our heuristics can be extended to to situations in which lead-time is positive and deterministic, this extension will be briefly discussed in the Appendix.}
+%can be easily extended to systems with positive and fixed replenishment lead-times.
+There is a fixed ordering cost $o$ for placing a replenishment and a variable ordering cost $v$ proportional to the order quantity; a variable inventory holding cost $h$ is charged on every product unit carried from one period to the next, regardless of its age; a variable penalty cost $p$ is charged for each back-ordered unit at the end of each period during which it remains unsatisfied; a variable wastage cost $w$ is charged for every item of age $A$ discarded at the end of a period.
+Our aim is to find a replenishment plan that minimizes the expected total cost, which is composed of ordering costs, holding costs, penalty and waste costs over a $T$-period planning horizon.
+	
+	Let the net inventory denote the on-hand stock minus backorders. The model assumes that the sequence of events in each period is as follows. At the beginning of a period the decision maker checks the net inventory for different product ages \blue{that has been carried over from the former period}. Since we are dealing with complete backlogging, this quantity may be negative. However, note that only fresh products can be backordered, since the supplier only delivers fresh products. On the basis of this information, if necessary, the decision maker issues an order. Then the random demand is observed and items are issued to meet demand according to a FIFO policy. After demand is realised \blue{at the end of the period inventory ages and} if the net inventory is positive, any item of age $A$ that remains in stock is discarded and waste cost is incurred\blue{. I}tems of age 1 to $A-1$ that remain in stock are carried over to the next period and holding costs are incurred. If the net inventory is negative, penalty cost is incurred on any unit backordered.
+
+\blue{For convenience, the notation adopted in the rest of this work is summarized in Table \ref{tab:notation}.} 
+	\begin{table}
+	\fbox{	
+	\begin{tabular}{ll}
+		\multicolumn{2}{l}{Indices}\\
+		$t$ & period index, $t=1,\ldots,T$, with $T$ the time horizon\\
+		$a$ & age index, $a=1,\ldots,A$, with $A$ the fixed shelf life\\
+		\\
+		\multicolumn{2}{l}{\blue{Problem parameters}}\\
+		$o$ & fixed ordering cost\\
+		$v$ & unit procurement cost\\
+		$h$ & unit inventory cost\\
+		$p$ & unit penalty cost \\
+		$w$ & unit disposal cost\\
+		$i^a$ & \blue{initial inventory of age $a$ at the beginning of the planning horizon}\\
+		\\	
+		\multicolumn{2}{l}{Random variables}\\
+		$D_t$ 	& random demand in period $t$ with cumulative distribution function $F_t$\\
+		\\	
+		\multicolumn{2}{l}{State variables}\\
+		$\mathbf{I}_t$&system state (i.e. inventory vector) at end of period t\\
+		$I^a_t$ 	& inventory of age $a$ at end of period $t$, where $I_t^a \ge 0$ for $a=2,\ldots,A$\\
+		$W_t$ 	& waste at the end of period $t$ (i.e. $I^A_t$)\\		 
+		%& and probability mass function $f_t$
+%		$I^a_t$  & random inventory level of age $a$ at the end of period $t$\\
+		%$I_t^a$ & Inventory of age $a$ at end of period $t$, $I_t^a \ge 0$ for $a=2,\ldots,A$ \\
+		%$I_t^1$ & Fresh items/backorders at the end of period $t$, $I_t^1\in \mathbb{R}$\\
+		%$I_0^a$&initial inventory at the beginning of the planning horizon, $I_0^a = 0$\\  
+		\\
+		\multicolumn{2}{l}{Decision variables}\\
+		$Q_t$ & order quantity at the beginning of period $t$ given inventory $I^1_{t-1},\ldots,I^{A-1}_{t-1}$
+		%$X$   & vector $(x_1,\ldots,x_T)$\\
+	%	$y_t$ & a variable that takes value 1 if $x_t>0$ and value 0 otherwise\\
+%		$Y$   & vector $(y_1,\ldots,y_T)$\\
+	\end{tabular}
+	}
+	\label{tab:notation}
+	\caption{Notation adopted in this work.}
+	\end{table}
+\blue{The problem can be naturally modeled as a stochastic dynamic problem by considering the following components.}	
+	\paragraph*{\bf States.}
+\blue{The system state at the beginning of period $t$ is represented by the vector $\mathbf{I}_{t-1}=(I^1_{t-1},\ldots,I^{A-1}_{t-1})$; note that this also the system state at the end of period $t-1$, and that the waste $W_{t-1}$ (i.e. $I^A_{t-1}$) does not determine future decisions; inventory of age 1 is the only value in the state vector that can take negative values to denote state of the cumulated backorders}. 
+	
+	%The inventory of age 1 is bounded by $- U(t-1)\leq i_{t-1}^1\leq \min \{ U J,U(T-t+1) \}$, being the only one that can take negative values to denote backorders. For $a=2,\ldots,J-1$, the relation is $0\leq i_{t-1}^a\leq \min ( U~J,U(T-t+1) )$.
+	
+	\paragraph*{\bf Actions.}
+\blue{The action is the order quantity $Q_t$ for period $t$ given initial inventory $\mathbf{I}_{t-1}$}.
+	%is bounded by $0\leq x_t \leq U~J$, due to perishability. This determines the set of possible actions from a given state.
+	
+	\paragraph*{\bf State Transition Function.}
+\blue{the state transition follows FIFO dynamics. The inventory at the end of period $t$ is determined by the inventory from the previous period, the realised demand $D_t$ and the delivery of the ordered quantity $Q_t$.} The notation $(\cdot)^+ = \max(\cdot,0)$ is used to shorten the expressions. Given \blue{state $\mathbf{I}_{t-1}$ and action $Q_t$, the state transition of the system is described by the following expressions.} Waste, i.e. items of age $A$, at the end of period $t$ is defined as
+%	
+	\begin{equation}
+		\label{eq:invWaste}
+		W_t=(I^{A-1}_{t-1} - D_t)^+, ~~t=1,\ldots,T.
+	\end{equation}
+	Inventory of age $a\in\{2,\ldots,A-1\}$ that can still be  used in the next period \blue{follows from}
+	\begin{equation}
+		\label{eq:inv2}
+		I^a_{t}= \left(I^{a-1}_{t-1} - (D_t-\sum_{j=a}^{A-1} I^j_{t-1})^+\right)^+, ~~t=1,\ldots,T; ~~ a=2,\ldots,A-1.
+	\end{equation}
+	%
+	Finally,  \blue{inventory of fresh products/backorders follows from}
+	%
+	\begin{equation}
+		\label{eq:inv1}
+		I^1_{t}= Q_t - (D_t-\sum_{a=1}^{A-1}I^a_{t-1})^+, \ t=1,\ldots,T.
+	\end{equation}
+	
+	%We define the random transformation from a state $s$ to another $S$, for action $x_t$ , following the expressions (\ref{eq:invWaste}), (\ref{eq:inv2}) and (\ref{eq:inv1}) as a function, $S=\phi(s,x_t,D)$.
+	
+	\paragraph*{\bf Immediate Costs.}
+\blue{Given state $\mathbf{I}_{t-1}$ and the described transformation  towards state $\mathbf{I}_{t}$ as a consequence of action $Q_t$, the immediate costs are given by
+	\begin{equation}
+		\label{eq:imcosts}
+			C(\mathbf{I}_{t-1},Q_t) = g(Q_t)+ \mathrm E\left( h\sum_{a=1}^{A-1}(I^a_{t})^+ + p (-I^1_{t})^+ + w ~ W_t \right)
+			\end{equation}
+%	
+where $\mathrm E$ denotes the expectation taken with respect to random demand $D_t$ and function $g$ is defined as:
+%	
+	\begin{equation}
+	g(Q)=\left\{ 
+	\begin{array}{ll}
+	o + v Q & \text{ if } Q>0 \\
+	0 & \text{ if } Q=0 
+	\end{array}\right.
+	\end{equation}
+	}
+	\paragraph*{\bf Objective Function.}
+The objective is to \blue{find an order policy that minimizes} the expected total cost over the $T$ period planning horizon, that is
+%	
+%	\begin{equation}
+%		\label{eq:recursive}
+%		\min_{Q_1} C(I_{0},Q_1)+\mathrm E\left[\min_{Q_2} C(I_{1},Q_2)+ \mathrm E\left[\cdots+\min_{Q_T}  C(I_{T-1},Q_T)\right]\right].
+%	\end{equation}
+	\begin{equation}
+		\label{eq:recursive}
+	\blue{	\min_{Q_1}\left( C(\mathbf{I}_0,Q_1)+\min_{Q_2}\left( C(\mathbf{I}_{1},Q_2)+ \cdots+\min_{Q_T}  C(\mathbf{I}_{T-1},Q_T)\right)\right).}
+	\end{equation}
+	%where for sake of brevity and clarity, $x_i=x^{s_i}_i$.
+	
+	
+	
+
+\section{Perishable stock dynamics: theoretical results}\label{sec:theoretical_results}
+%	
+
+\blue{The purpose of this Section is to provide exact analytical expressions for the expected inventory level at different ages for the case where items can age indefinitely. These results are used to provide a good approximation of the expected value of the inventory levels for the case where items perish after $A$ periods.}
+
+Consider \blue{the single-item single-stocking location inventory system over a single period $t$ subject to a random demand $D$ with known cumulative distribution $F$, probability density function $f$, and expected value $\mu$. Since we refer to a single period problem, in order to keep notation compact, we have dropped the index $t$ from $D_t$, $F_t$, $f_t$ and $\mu_t$.} %Items in stock may be of different (discrete) ages. For this reason we represent them by means of a vector $\vec{I}\equiv(I^1,\ldots,I^a,\ldots,I^A)$. Initial inventory is denoted by vector $\vec{i}_{\text{b}}$ --- where subscript $\text{b}$ denotes ``beginning'' while the inventory at the end of the period, after demand is realised, is denoted by the random vector $\vec{I}_{\text{e}}$, where subscript $\text{e}$ denotes ``end''. 
+
+\blue{We have seen that only $I^1_{t}$ can take a negative value, whereas older age inventory is bound to be nonnegative. For convenience, we introduce $I^0_{t-1}=Q_t$, so that we can denote the overall inventory available at the beginning of the period as
+\[Y=\sum_{a=0}^{A-1} I^a_{t-1}\]
+we also exploit notation $I^A_{t}$ to denote the waste $W_t$.}	
+%	If $i_{\text{b}}^1$ is positive, this value denotes the number of items ordered/produced in the current period; if it is negative, it denotes a certain amount of backordered demand at the beginning of a period; furthermore $i_{\text{b}}^a\geq 0$ for $a>1$ denotes the amount of items that were produced $a-1$ periods before and that are in stock at the beginning of the current period.
+%Items are issued according to a first-in first-out (FIFO) policy, therefore random demand $d$ is served according to 
+%	\begin{alignat}{1}
+%		&I^1_{\text{e}}=i_{\text{b}}^1-(D-\sum_{a=2}^M I^a_b)^+\\
+%		&I^a_{\text{e}}=\left(i_{\text{b}}^a-(D-\sum_{k=a}^{A-1} %I^k_b)^+\right)^+~~\mathrm{for}~~a>1
+%	\end{alignat}
+%	It immediately follows that $i_{\text{b}}^a\geq 0$ and $I_{\text{e}}^a\geq 0$ for $a>1$ and only $i_{\text{b}}^1$ and $I_{\text{e}}^1$ can take negative values.
+ 
+Our aim is to \blue{find analytical expressions for $\mathrm{E}(I^a_{t})$, i.e. the expected value of $I^a_{t}$}, for $a=1,\ldots,A$. \blue{The following Lemmas provide analytical expresions to calculate the expected value of inventory levels of different ages, when they can age indefinetly, both for discrete and continous demand support.}
+%	
+\begin{lem} 
+\blue{Let $D$ be a random variable defined over a continuous support and $Y=\sum_{a=0}^{A-1} I^a_{t-1}$, 
+		 \[\mathrm{E}(-I^1_{t})^+=\int_0^Y(Y-x)f(x)\d x-(Y-\mu)\]}
+	\end{lem}
+	\begin{proof}
+		see \cite{citeulike:13075114}, Lemma 3
+	\end{proof}
+%	
+	\begin{lem}\label{lem:age_expectation_disc}
+		Let $D$ be a random variable defined over a discrete support \blue{$\mathbb{S}\subseteq \mathbb N$ with a positive probability mass function $f(x)=F(x)-F(x-1)$ for $x\in\mathbb S$ and zero elsewhere. Let $Y_a=\sum_{j=a-1}^{A-1} I^j_{t-1}$, $Y_{a+1}=\sum_{j=a}^{A-1} I^j_{t-1}$, and $Y_{A+1}=0$}, then for $a=1,\ldots,A$ \blue{
+		\[\mathrm{E}(I^a_{t})^+=\sum_{x=0}^{Y_a-1}F(x)-\sum_{x=0}^{Y_{a+1}-1}F(x)\]
+		}.
+	\end{lem}
+	\begin{proof} \blue{ Note that $I^{a-1}_{t-1}=Y_a-Y_{a+1}$; moreover, for any value $Y\in \mathbb S$ we have $\sum_{x=0}^Y (Y-x) f(x) = \sum_{x=0}^{Y-1} F(x)$ \citep{citeulike:13075114}. Following the introduced symbols and inventory dynamics of Equations \eqref{eq:invWaste}, \eqref{eq:inv2} and \eqref{eq:inv1}, we have
+		\begin{alignat}{2}
+			\mathrm{E}(I^a_{t})^+
+			&=\sum_{x=0}^{Y_a}(I^{a-1}_{t-1}-(x-Y_{a+1})^+)f(x)\nonumber\\
+			&=\sum_{x=0}^{Y_a}(Y_a-Y_{a+1}-(x-Y_{a+1})^+)f(x)\nonumber\\
+			&=\sum_{x=0}^{Y_{a+1}}(Y_a-Y_{a+1})f(x)+\sum_{x=Y_{a+1}+1}^{Y_a}(Y_{a}-x)f(x)\nonumber\\
+			&=\sum_{x=0}^{Y_{a+1}}(Y_a-Y_{a+1})f(x)+\sum_{x=0}^{Y_a}(Y_a-x)f(x)-\sum_{x=0}^{Y_{a+1}}(Y_{a}-x)f(x)\nonumber\\
+			&=\sum_{x=0}^{Y_a}(Y_a-x)f(x)-\sum_{x=0}^{Y_{a+1}}(Y_{a+1}-x)f(x)\nonumber\\
+			&=\sum_{x=0}^{Y_a-1}F(x)-\sum_{x=0}^{Y_{a+1}-1}F(x)\nonumber
+		\end{alignat}}
+	\end{proof}
+%	
+	\begin{lem}
+		Let $D$ be a random variable defined over a continuous support, \blue{$Y_a=\sum_{j=a-1}^{A-1} I^j_{t-1}$, $Y_{a+1}=\sum_{j=a}^{A-1} I^{j}_{t-1}$, and $Y_{A+1}=0$}, then for $i=1,\ldots,A$
+		\[\mathrm{E}(I^a_{t})^+=\int_0^{Y_a}(Y_a-x)f(x)\d x-\int_0^{Y_{a+1}}(Y_{a+1}-x)f(x)\d x .\]. 
+	\end{lem}
+	\begin{proof}
+	\blue{Follows from $I^{a-1}_{t-1}=Y_a-Y_{a+1}$ and a similar reasoning to the one presented in Lemma \ref{lem:age_expectation_disc}.}
+	\end{proof}
+%	
+	\begin{lem}
+		$\mathrm{E}(I^a_{t})=\mathrm{E}(I^a_{t})^+ -\mathrm{E}(-I^a_{t})^+$
+	\end{lem}
+	\begin{proof}
+		Follows from the definition of expectation.
+	\end{proof}
+%	
+	\begin{lem}
+		For $a=2,\ldots,A$
+		\[\mathrm{E}(I^a_{t})=\mathrm{E}(I^a_{t})^+\]
+	\end{lem}
+	\begin{proof}
+		\blue{Follows from the fact that only fresh products can be back-ordered.} 
+	\end{proof}
+%	
+We now consider a horizon comprising $T$ time periods with random demand $D_t$ in each period $t=1,\ldots,T$. Items carried over from one period to the next age and become one time period older. We first analyse the case where {\em items can age indefinitely}. Our aim is to compute \blue{$\mathrm{E}(I^a_t)$}, i.e. the expected value of \blue{$I^a_{t}$}, for $t=1,\ldots,T$ and $a=t,\ldots,A+a-1$. This question is easy to handle if we reduce a $t$-period problem to a single-period problem subject to cumulative demand $D=D_1+\ldots+D_t$. Consider \blue{$\mathrm{E}(I^a_{t})$} for this new single-period problem, as previously obtained, and note that the value obtained corresponds to \blue{$\mathrm{E}(I^{t+a-1}_{t})$} for the $t$-period problem.
+	
+\paragraph*{\bf Example.} Consider a $T=2$ periods planning horizon. Demand $D_t$ in each period $t$ follows a Poisson distribution with rate $\lambda_t=50$. The initial inventory is \blue{$\mathbf{I}_{t-1}=(I^0_{t-1}, I^1_{t-1}, I^2_{t-1})=(25,50,50)$.} This means there are 25 fresh items that have just been produced; 50 items that were produced a period before and 50 items that were produced two periods before, which are still in stock at the beginning of the planning horizon. To determine \blue{$\mathrm{E}(I^a_{1})$}, $a=1,\ldots,A$ we apply the results just presented, in particular Lemma \ref{lem:age_expectation_disc}, which lead to $\mathrm{E}(I_1)=(25, 47.18, 2.81)$. \blue{The value of $\mathrm{E}(I^a_2)$ for $a=2,\ldots,A+1$ can be derived considering the $2$-period problem as} a single-period problem subject to a Poisson demand with rate $\lambda=100$ and we apply once more the results just presented and Lemma \ref{lem:age_expectation_disc}. This leads to the vector \blue{$\mathrm{E}(\mathbf{I}_2)=(0, 21.04, 3.98)$. Since we do not place an order in period 2, the expected number of fresh items at the end of period 2 is zero. Items} of age 3 at the end of period 1 have aged.
+	
+	\paragraph*{}
+	The case in which items of age $A$ --- i.e. items that were produced $A-1$ periods before --- are discarded at the end of a period, complicates the exact analytical derivation of \blue{$\mathrm{E}(I^a_{t})$} for $t=1,\ldots,T$ and $a=t,\ldots,A+t-1$. We shall therefore proceed in a pragmatic manner, by introducing a simple and yet powerful approximation that reuses as much as possible results developed so far. We will demonstrate the effectiveness of this approximation in our computational study.
+	
+	The key intuition leading to our approximation is an inductive argument. Our base case is the \blue{determination of $\mathrm{E}(I^a_{t})$}, which can be carried out analytically for $t=1$ and $a=t,\ldots,A$ \blue{(with $I^A_{t}=W_t$)} by using the results presented so far. In principle it is also possible to determine analytically the higher moments of the distribution of \blue{$I^a_{t}$}, e.g. the variance \blue{$\mathrm{Var}(I^a_{t})$} for $t=1$. To approximate \blue{$\mathrm{E}(I^a_{t})$}, we first operate as if items can age indefinitely, i.e. they are never discarded, and we reduce the $t$-period problem to a single period problem with demand \blue{$D=D_1+\ldots+D_t+W_{1}+\ldots+W_{t-1}$}, where distributions of \blue{$W_{1},\ldots,W_{t-1}$} are derived at previous induction steps. Once this new demand distribution is obtained, values for \blue{$\mathrm{E}(I^a_{j})$ for $j<t$ and $a=t,\ldots,A-1$} can be computed iteratively by reusing results developed so far. Once more, one should note that the value \blue{$\mathrm{E}(I^a_{t})$} obtained for this new single-period problem corresponds to \blue{$\mathrm{E}(I^{t+a-1}_{t})$} for the $t$-period problem; of course, \blue{$\mathrm{E}(I^a_{t})=0$} for \blue{ $a>A$.}
+	
+	\paragraph*{\bf Example.} Consider a problem in which $D_t$ follows a Poisson distribution with rate $\lambda_t$ for $t=1,\ldots,T$ and the shelf life is $A=3$. The approach is based on an approximation of the distribution of \blue{$I^a_{t}$} by fitting an appropriate first moment (i.e. mean) to a Poisson distribution. In general, one may want to use more advanced distribution fitting techniques. This means that in period $t$, after having carried out the induction over periods $1,\ldots,t-1$, we will reduce the $t$-period problem to a single period problem \blue{subject to} Poisson demand with expected value \blue{$\mathrm{E}(D_1)+\ldots+\mathrm{E}(D_t)+\mathrm{E}(W_{1})+\ldots+\mathrm{E}(W_{t-1})$.} More specifically, we refer to the same problem analysed in the previous example. However, now the shelf life is limited to $A=3$. We first compute $\mathrm{E}(\blue{\mathbf{I}_1})=(25, 47.18, 2.81)$, for which the computation is identical to the one carried out under the previous example setting. By exploiting this information, and in particular \blue{$\mathrm{E}(I^3_{1})=2.81$}, we reduce the two-period problem to a single period problem under Poisson demand with rate $\lambda=50+50+2.81$ and exploit once more Lemma  \ref{lem:age_expectation_disc} to compute the approximation $(0, 19.47, 2.77)$\blue{. This vector} is close to the actual vector $\mathrm{E}(\blue{\mathbf{I}_2})=(0, 20.219, 1.993)$ which can be found carrying out an exact convolution.
+	
+	\paragraph*{}
+	If the demand distribution is not uniquely determined by its mean, higher order moments can be obtained and matched in a similar fashion, for instance to a normal distribution.
+	
+	%\paragraph*{Example.} Introduce example.
+	
+	\section{Two new heuristics}
+	\label{sec:silversanalytic}
+%	
+\blue{In this section, we present two heuristics that exploit the mathematical properties just presented: an analytical extension of Silver's heuristic and a simulation-optimisation heuristic}.
+
+\vspace{1em}
+\noindent
+{\bf An analytical extension of Silver's heuristic.} Silver's heuristic \citep{citeulike:7292564} extends the well-known Silver-Meal lot sizing heuristic \cite{SilverMeal1973} to a probabilistic setting. The key idea behind the Silver-Meal lot sizing heuristic is to determine the average cost per period as a function of the number of periods that can be covered by the current order. Exploiting the fact that this function is convex with respect to the the number of periods, it is possible to determine the optimal length of the next replenishment cycle. Next, we briefly illustrate how the results presented in Section \ref{sec:theoretical_results} can be used to extend Silver's heuristic to the case in which inventory comprises items of different age classes. We shall first formally define the concept of {\em replenishment cycle}.
+	\begin{mydef}
+		A replenishment cycle \blue{$(t,r)$} denotes the time interval between two consecutive replenishments executed at period \blue{$t$} and at period \blue{$r+1$}.
+	\end{mydef}
+	
+	Consider a replenishment cycle \blue{$(t,r)$ where order quantity $Q_t$ aims to cover demand  of periods $t,\ldots,r$.} % Let $\vec{i}$ denote the scalar vector representing the inventory at the beginning of the cycle and $\vec{I}_t$ the random vector representing inventory at the end of period $t=m+1,\ldots,n$. 
+	The following lemma extends findings in \cite{Federgruen}.
+	\begin{lem}\label{lem:convexity}
+		The expected total cost \blue{defined by equations \eqref{eq:invWaste}\ldots \eqref{eq:imcosts} during replenishment cycle $(t,r)$ given starting inventory $I_{t-1}$ is convex in $Q_t$ for $Q_t>0$}.
+	\end{lem}
+	\begin{proof}
+		%Consider the objective function of the stochastic programming model in Section \blue{ \ref{sec:problemdescription}} (Eq. . Since 
+		\blue{No order is placed in periods $t+1,\ldots,r$, such that the total costs of the replenishment cycle is}
+		%if we assume that the initial inventory $\vec{i}$ is known, the expected total cost of $(m,n)$ can be expressed, by using Eq. \ref{eq:recursive}, as
+		\blue{
+		\[C(\mathbf{I}_{t-1},Q_t)+C(\mathbf{I}_t,0)+\ldots+C(\mathbf{I}_{r-1},0)\]}
+		This function is separable, and its separable components are all increasing or decreasing convex piecewise linear functions of $Q_t$: the unit ordering cost, holding and waste costs increase with $Q_t$, the penalty cost decreases with $Q_t$; this function is therefore convex in $Q_t$.% for $Q_t>0$. 
+	\end{proof}
+	\noindent
+%\blue{Note that for $Q=0$ the expected total cost of $(t,r)$ is equal to
+%	\[C(\mathbf{I_{t-1}},0)+C(\mathbf{I_t},0)+\ldots+C(\mathbf{I_{r-1}},0) .\]}
+	
+	Our heuristic %operates under the assumption that the initial inventory at the beginning of period $m$, $\vec{i}_{m-1}$, is known. It then 
+	\blue{exploits the results in Section \ref{sec:theoretical_results} to compute, for a given starting inventory $\mathbf{I}_{t-1}$, the inventory levels $\mathrm{E}(\mathbf{I}_t)$ during the replenishment cycle $t\in\{t,\ldots,r\}$. Using} Lemma \ref{lem:convexity} it computes the optimal order quantity \blue{$Q_t$ for replenishment cycle $(t,r)$} as well as the associated expected total cost per period. As in Silver's heuristic, we increase the value of \blue{$r$}, starting from \blue{$t$}, until the expected total cost per period associated with replenishment cycle \blue{$(t,r)$} first increases. Let \blue{$r+1$} be such value\blue{. T}he optimal action in period \blue{$t$ is to order a quantity $Q_t$ which} minimises the expected total cost for replenishment cycle \blue{$(t,r)$}. A pseudocode of the algorithm is given in Algorithm \ref{algorithm_1}.
+	\begin{figure}
+		\begin{algorithm}[H]
+			\KwData{the current period \blue{$t$; initial inventory $\mathbf{I}_{t-1}$ at the beginning of period $t$}}
+			\KwResult{the optimal order quantity, \blue{$Q^*\ge 0$}}
+			$r\leftarrow t$\;
+			$c^*\leftarrow \infty$\;
+			\blue{$c \leftarrow \infty$\;}
+			\Do{$c\le c^*$ and $r< t+A$}{
+				$Q\leftarrow$ $\text{argmin}_{Q\geq0} [ C(\mathbf{I}_{t-1},Q)+C(\mathbf{I}_{t},0)+\ldots+C(\mathbf{I}_{r-1},0) ]$\;
+				$c\leftarrow (C(\mathbf{I}_{t-1},Q)+C(\mathbf{I}_{t},0)+\ldots+C(\mathbf{I}_{r-1},0))/(r-t-1)$\;
+				$r\leftarrow r+1$\;
+			}
+		\caption{Analytical extension of Silver's heuristic}
+		\label{algorithm_1} 
+	\end{algorithm}
+\end{figure}
+We implement this heuristic in a rolling horizon framework: if the planning horizon comprises $T$ periods, at the beginning of each period \blue{$t=1,\ldots,T$} we run the procedure described in Algorithm \ref{algorithm_1} to determine if an order must be issued and, if so, the respective order quantity. \blue{It should be noted that Algorithm \ref{algorithm_1} is equivalent to Silver's heuristic provided $A=\infty$ and $w=0$.}
+
+%\paragraph*{\bf Example.} \blue{Consider an instance over a planning horizon of $T=3$ periods, with shelf life $A=3$}. Demand in each period $t$ is Poisson distributed with \blue{rate $\lambda=(4,3,3)$}. Fixed ordering cost \blue{is $o=10$, holding cost is $h=1$, disposal cost is $w=2$ and penalty cost $p=5$}. Initial inventory is \blue{$\mathbf{I_{0}}=(I^1_{0},I^2_{0})=(1,1)$}. We consider replenishment cycles \blue{$(t,r)$} of increasing length.
+%
+%For \blue{$(t,r)=(1,1)$, deciding to order gives $Q_1=3.96$ with an expected total cost per period of 13.21. So, it is cheaper not to} order ($Q_1=0$) and use existing inventory to cover demand in period 1\blue{, as the expected total cost per period is 10.67. Deciding to place an optimal order quantity for $(t,r)=(1,2)$ %of ; for $(1,2)$ the optimal action is to order 
+%of $Q_1=6.04$ provides expected total cost per period of 9.56. S}ince this is less than 10.67 we proceed and consider the next possible replenishment cycle length\blue{. For $(t,r)=(1,3)$ the optimal action is to order $Q_t=7.99$ with expected total cost per period of 9.68. S}ince this is greater than 9.56, we conclude that the optimal action in period 1 is to order \blue{$Q_1=6.04$} and incur an expected total cost per period of 9.56. After observing actual demand in period 1, the procedure can be iterated to determine order quantities in following periods.
+
+\paragraph*{\bf Example.} \blue{Consider an instance over a planning horizon of $T=3$ periods, with shelf life $A=3$}. Demand in each period $t$ is Poisson distributed with rate $\lambda_t$, where $\lambda\in\{4,3,3\}$. Fixed ordering cost $o$ is set to 10, holding cost is set to 1, waste cost $w$ is set to 2, penalty cost $p$ is set to 5. Initial inventory is \blue{$\mathbf{I}_{0}=(I^1_{0},I^2_{0})=(1,1)$}. We consider replenishment cycles \blue{$(t,r)$} of increasing length: 
+\begin{itemize}
+\item
+for \blue{$(t,r)=(1,1)$} the optimal action is to not order ($Q=0$) and use existing inventory to cover demand in period 1, the expected total cost per period of this policy is 10.67 --- note that, if we decided to place an order, the optimal order quantity to cover demand in period 1 would be $Q=3.96$ and the expected total cost per period would increase to 13.21; 
+\item
+for \blue{$(t,r)=(1,2)$} the optimal action is to place an order $Q=6.04$, the expected total cost per period of this policy is 9.56, since this is less than 10.67 we proceed and consider the next possible replenishment cycle length; 
+\item
+for \blue{$(t,r)=(1,3)$} the optimal action is to order $Q=7.99$, the expected total cost per period of this policy is 9.68; since this is greater than 9.56, we conclude that the optimal action in period 1 is to order $Q=6.04$ and incur an expected total cost per period of 9.56. After observing actual demand in period 1, the procedure can be iterated to determine order quantities in following periods.
+\end{itemize}
+
+
+%\section{Simulation-optimisation heuristics}
+%\label{sec:simulation}
+
+\vspace{1em}
+\noindent
+{\bf Simulation-optimisation heuristic.} 
+The approach discussed \blue{so far} extends Silver's heuristic by using an analytical approximation for the expected value of the inventory levels (Section \ref{sec:theoretical_results}). \blue{The second approach uses Monte Carlo simulation to approximate $\mathrm{E}(\mathbf{I}_t)$ in a replenishment cycle. Using} this sample-based approximation we can estimate the expected total cost of replenishment cycles and therefore develop a simulation-based extension of Silver's heuristic. The heuristic obtained is independent of the specific demand distribution under scrutiny.
+
+\begin{figure}
+		\begin{algorithm}[H]
+			\KwData{the current period \blue{$t$; initial inventory $\mathbf{I}_{t-1}$ at the beginning of period $t$}}
+			\KwResult{the optimal order quantity, \blue{$Q^*\ge 0$}}
+			$r\leftarrow t$\;
+			$c^*\leftarrow \infty$\;
+			\blue{$c \leftarrow \infty$\;}
+			\Do{$c\le c^*$ and $r< t+A$}{
+				$Q\leftarrow$ $\text{argmin}_{Q\geq0} [ \widehat{C}^N_{t,r}(\mathbf{I}_{t-1},Q)]$\;
+				$c\leftarrow (\widehat{C}^N_{t,r}(\mathbf{I}_{t-1},Q))/(r-t-1)$\;
+				$r\leftarrow r+1$\;
+			}
+		\caption{Simulation-optimisation heuristic}
+		\label{algorithm_2} 
+	\end{algorithm}
+\end{figure}
+
+More precisely, given a cycle $(t,r)$, \blue{the method draws} $N$ independent samples of the demand for each period $k=t,\ldots,r$. It then generates sample average estimates $\widehat{\mathrm{E}}(\mathbf{I}_k)$ of  $\mathrm{E}(\mathbf{I}_k)$, for $k=t,\ldots,r$, as a function of the order quantity $Q$ and of the initial inventory $\mathbf{I}_{t-1}$, by relying on the inventory dynamics described in Eq. \eqref{eq:invWaste}, \eqref{eq:inv2} and \eqref{eq:inv1}. These estimates $\widehat{\mathrm{E}}(\mathbf{I}_k)$ can be immediately translated into a Monte Carlo estimate $\widehat{C}^N_{t,r}(\mathbf{I}_{t-1},Q)$ of the expected total cost for cycle $(t,r)$.
+\[\widehat{C}^N_{t,r}(\mathbf{I}_{t-1},Q)=\sum_{k=t}^r \left(h \widehat{\mathrm{E}}(I^1_k)^++h\sum_{a=2}^{A-1}\widehat{\mathrm{E}}(I^a_k)+p\widehat{\mathrm{E}}(-I^1_k)^++w\widehat{\mathrm{E}}(I^A_k)\right ).\] 
+This cost estimate can be readily used in the context of an algorithm (Algorithm \ref{algorithm_2}) that mimics the one previously presented for the computation of the optimal order quantity $Q^*$.
+
+\vspace{1em}
+\blue{Finally, it is worth sparing some words on the computational complexity of the two approaches. Both our heuristics are extension of Silver's heuristic and computationally speaking they are similar to it. This can be clearly observed by contrasting Algorithms \ref{algorithm_1} and \ref{algorithm_2}. However, while Algorithm \ref{algorithm_1}, by leveraging on our analytical approximations, features complexity $\text{O}(A T \log \mathcal{Q})$, i.e. in the worst case, for each period $t=1,\ldots,T$, we need to minimize a convex function involving at most $A$ age categories over domain $0,\ldots,\mathcal{Q}$, where $\mathcal{Q}=\epsilon \bar{Q}$, $\epsilon$ denotes the selected error threshold (i.e. discretization step), and $\bar{Q}$ denotes an upper bound for the order quantity; Algorithms \ref{algorithm_2} relies on a sample-based approach exploiting $N$ samples to compute the optimal order quantity at each period $t=1,\ldots,T$, therefore its complexity only increases linearly in $N$ and is $\text{O}(A T N \log \mathcal{Q})$.}
+
+%\begin{algorithm}[h]
+%	\caption{Monte-Carlo}
+%	\label{alg:Monte-Carlo}
+%		\KwData{random demand vector $(D_1\ldots,D_T)$}
+%	        \KwResult{estimate $c$ of the expected total cost of the heuristic policy}
+%		\medskip
+%		\For {$i=1$ \textbf{to} $M$ }{
+%			$\mathcal{S} \leftarrow$ a sample path of $(D_1\ldots,D_T)$\;
+%			$c \leftarrow 0$\;
+%			\For {$t=1$ \textbf{to} $T$ }{
+%				use the sample-based variant of Algorithm \ref{algorithm} to compute $Q_t^*$ from $\mathcal{S}$\;
+%				$c \leftarrow c +$ total cost for period $t$\;
+%			}
+%		}
+%		$c \leftarrow c/M$\;
+%\end{algorithm}
+
+
+
+\section{Computational study}
+\label{sec:computationalstudy}
+
+In this section we present a computational study that investigates the effectiveness of our heuristics. Section \ref{sec:design} outlines the experimental design; Section \ref{sec:results} presents the cost differences reached by the heuristics; and Section \ref{sec:discussion} discusses our findings. 
+
+\subsection{Experimental design}
+\label{sec:design}
+\begin{figure}[h!]
+\centering
+\includegraphics[width=1\columnwidth]{Figures/dpatterns}
+\caption{Demand patterns used in our computational study; the values denote $E[D_t]$ in each period $t \in \{1,\ldots,T\}$}
+\label{fig:instances}
+\end{figure}
+To study the goodness of the heuristics pr\blue{esented in Section} \ref{sec:silversanalytic}, we follow the experimental setup originally presented in \cite{citeulike:13341691} in which the authors employ a test bed comprising ten different stochastic demand patterns over a time horizon of $T=15$ periods and a shelf life of the items of $A=3$ periods. The demand patterns include a stationary demand instance (STA), two life cycle instances (LCY1 and LCY2), two sinusoidal (SIN1 and SIN2), and four empirical (EMP1,\ldots, EMP4) patterns of expected demand; these patterns are displayed in Figure \ref{fig:instances} --- full numerical details are provided in Appendix II. The stochastic demand in each period $t$ follows a Poisson distributions mean $\lambda_t$; to ensure that the state space is finite in \blue{the} SDP implementation we considered the cumulative distribution of the demand over the whole horizon and we limited the support to the values between 0 and the upper 99\% quantile of this distribution. 
+
+\blue{The} values of the parameters of the objective function \ref{eq:recursive} have been \blue{varied in a systematic way. Note that the unit procurement cost is directly related to the penalty cost $p$ and disposal cost $w$. Variation of all of them may lead to a colinear design. Moreover, the inventory holding cost $h$ and setup cost $o$ define the length of the replenishment cycle, so only one of them has to be varied. Therefore the value of the procurement cost has been fixed to $v=0$} while the unit inventory cost is set to \blue{$h=1$}. For penalty and disposal costs, values $p \in \{2,5,10\}$ and $w \in \{2,5,10\}$ have been considered. Finally, the fixed ordering cost is set to the sum of mean demand of all the periods of the instance multiplied by a scale factor $l_o \in \{1, 2.5, 5\}$. The \blue{Monte Carlo} approximation of the order quantity (Algorithm \ref{algorithm_2}) is based on \blue{$N=300$} samples. To estimate the cost of our heuristics we rely on 500 rolling horizon simulation runs. The full Cartesian space of the different ten demand patterns and the different values for penalty, wastage and fixed costs results into a set of 270 scenarios. The experimental design is based on randomly selecting 20\% of them to test the extension of Silver's heuristic against the optimal solution provided by the stochastic dynamic programming model. Table \ref{tab:instances} shows the parameter values of the scenarios of the experimental design. Appendix II reports the 54 instances systematically selected in the context of our study.
+
+\subsection{Results}
+\label{sec:results}
+Table \ref{tab:pivot} summarises the results obtained for our computational study when pivoting on different parameters of the test bed: the problem instance, the order cost level $l_o \in \{1, 2.5, 5\}$, the penalty cost $p \in \{2, 5, 10\}$ and the waste cost $w \in \{2, 5, 10\}$. The first column of Table \ref{tab:pivot} (heading ``Analytical'') shows the \blue{MPE (Mean Percentage Error) from the optimal cost obtained by an exact SDP model to the cost obtained using our analytical extension of Silver's heuristic and its 95\% CI (Confidence Interval)}, while the second column (heading ``Simulation-optimization'') shows the same figures using our \blue{Monte Carlo} simulation-optimisation heuristic. 
+\begin{table}[]
+\centering
+\caption{Pivot table for the computational study}
+\label{tab:pivot}
+\begin{tabular}{l|cc|cc|c}
+              & \multicolumn{2}{|c}{Analytical} & \multicolumn{2}{|c}{Simulation-optimization} &\multicolumn{1}{|c}{Observations} \\ 
+              & MPE  & 0.95 CI          & MPE    & 0.95 CI            \\ \hline
+Ord cost level &     &                  &        & \\          
+1             & 3.06 & $\pm$1.77		& 2.91   & $\pm$ 1.66  &18 \\
+2,5           & 5.24 & $\pm$3.70		& 4.22   & $\pm$ 2.33  &18 \\
+5             & 9.59 & $\pm$6.36		& 7.14   & $\pm$ 3.84  &18 \\ \hline
+Penalty cost   & & &  &          \\
+2             & 2.37 & $\pm$1.17		& 2.00	 & $\pm$ 0.92  &18 \\
+5             & 4.63 & $\pm$3.04		& 4.63	 & $\pm$ 2.78  &18 \\
+10            & 10.8 & $\pm$6.51		& 7.65	 & $\pm$ 3.56  &18 \\ \hline
+Waste        & & &  &     \\  
+1             & 1.74 & $\pm$ 0.59	& 2,13   &$\pm$  0.75  &18 \\
+5             & 3.68 & $\pm$	2.03	& 3.44   &$\pm$  1.60  &18 \\
+10            & 12.4 & $\pm$	6.45	& 8.71   &$\pm$  3.99  &18 \\ \hline
+Demand pattern & & &  &      \\
+EMP1          & 8.62    &$\pm$ 7.33 & 6.47  &$\pm$ 5.13 & 10 \\
+EMP2          & 3.53 &$\pm$4.97  & 3.13 &$\pm$ 4.83     & 5 \\
+EMP3          & 8.78  &$\pm$10.1  & 7.34  &$\pm$ 5.78   & 9  \\
+EMP4       & 23.8 &$\pm$205          & 11.9 & $\pm$ 102 & 2   \\
+LCY1          & 2.42 &$\pm$3.44   & 2.55 &$\pm$3.27     & 5 \\
+LCY2          & 1.06 &$\pm$ 2.32  & 1.32 &$\pm$ 3.80    & 3\\
+RAND          & 14.6 &$\pm$12.1   & 12.9&$\pm$ 21.1     & 2\\
+SIN1          & 2.58 &$\pm$ 2.74   & 3.32 &$\pm$ 3.71   & 5\\
+SIN2          & 3.20 &$\pm$ 2.97   & 2.91 &$\pm$ 2.31   & 5\\
+STA           & 2.25 &$\pm$ 2.84  & 1.95 &$\pm$ 2.75    & 8\\ \hline
+\hline
+General       & 5.96  &$\pm$ 2.47  & 4.76   &$\pm$   1.57  & 54   \\ \hline
+Time (aprox.) & 5 secs                         & 50 secs                       
+\end{tabular}
+\end{table}
+\subsection{Discussion of results}
+\label{sec:discussion}
+From Table \ref{tab:pivot} follows that the simulation-optimization heuristic performs, in general, better than the analytical approximation. However, the latter runs about 10 times faster than the first. On average, the \blue{analytical heuristic} reaches a cost that is 5.96\% higher than the optimal cost for the 54 tested instances, while for the \blue{simulation-optimization heuristic} the cost difference reduces to 4.76\%. It can be observed that when any of the pivoting parameters is larger in comparison to the remaining ones, the heuristics perform worse. For example, for the order cost level, \blue{the simulation-optimization heuristic} heuristic  gives 2.91\% of difference with the optimal cost for a level equal to 1, while that percentage is 7.144\% for level 5. When considering the demand patterns, the cost difference is generally lower than 4\%. However, the random pattern (RAND) and empirical patterns (EMP1, EMP3, and EMP4) produce larger differences. In particular, the largest difference, which amounts to 23.8\% for the \blue{analytical heuristic} and 11.9\% for the \blue{simulation-optimization heuristic} is observed for EMP4. The reader should nevertheless note that there are only two observations of this pattern and the associated confidence interval is therefore very large.
+
+\begin{figure}[]
+\centering
+\resizebox{0.35\textwidth}{!}{%
+\begin{tikzpicture}
+\begin{axis}[
+  xlabel=A,
+  ylabel=MPD,
+  xtick={2,3,4},
+  yticklabel=
+{\pgfmathprintnumber\tick\%}]
+\addplot[smooth,mark=*,black] plot coordinates {
+        (2,42.64104266)
+        (3,21.93219701)
+        (4,11.32610599)
+    };  
+%\addplot table [y=P, x=$Q_A$]{data.dat};
+%\addlegendentry{$Q_A$ series}
+%\addplot table [y=P, x=$Q_B$]{data.dat};
+%\addlegendentry{$Q_B$ series}
+%\addplot table [y=P, x=$Q_D$]{data.dat};
+%\addlegendentry{$Q_D$ series}
+\end{axis}
+\end{tikzpicture}
+}
+\caption{Mean Percentage Difference (MPD) of the optimal solutions of the test bed (Table \ref{tab:instances}) for $A =2,3,4$ compared to the non-perishable case}
+\label{fig:diffA}
+\end{figure}
+
+
+%\begin{figure}[]
+%\centering
+%\includegraphics[scale=0.5]{Figures/MeanPercentageDiff.png}
+%\caption{Mean Percentage Difference (MPD) of the optimal solutions of the test bed (Table \ref{tab:instances}) for $A =2,3,4$ compared to the non-perishable case}
+%\label{fig:diffA}
+%\end{figure}
+
+
+
+\blue{By using our exact stochastic dynamic programming approach, we also computed the optimal policy for the instances of the test bed discussed in Section \ref{sec:design} when $A=2,3,4$, and compared their costs to the non-perishable case. As it can be seen in Figure \ref{fig:diffA}, the difference to the non-perishable case quickly decreases as $A$ increases. This means that for $A>4$, the advantage of adopting a model that accounts for perishability quickly becomes negligible.}
+
+
+%Concerning the computational complexity of both approaches, they are of the same order. First, the algorithm used is the same for both of them (the extension of Silver's) and increases linearly with the number of periods $T$. The value of $A$ only increases linearly the complexity of the algorithm. Now, estimating the expected value of inventory levels causes a difference. For that matter, there is a linear relation between the analytical and the simulation, considering that when  the expected value of inventory levels need to be estimated the analytical approach uses the results of Section \ref{sec:theoretical_results}, while the simulation approach computes $M$ times the equations (\ref{eq:invWaste}) (\ref{eq:inv2}) and (\ref{eq:inv1}). Therefore, both approaches have complexity of order $\mathcal{O}(T)$ and the size of $M$ is a linear factor relating them.}
+
+
+
+\section{Conclusions}
+\label{sec:conclusions}
+
+In this paper, we presented an inventory control model for perishable items with a fixed shelf-life. After discussing a number of analytical results concerning the dynamics of perishable stock in the inventory system under scrutiny, we introduced two extensions of Silver's heuristic: an analytical approximation and a Monte Carlo simulation-optimisation approach.  We demonstrated the effectiveness of these heuristics in an comprehensive numerical study that focused on a number of different demand patterns, as well as on a range of different values for the ordering cost, the penalty cost and the waste cost. Our results show that the simulation-optimisation approach features a better cost performance that, on average, is 5\% above the optimal cost, the respective figure for our analytical approximation is 6\% . 
+
+
+\section*{Acknowledgements}
+This paper has been supported by The Spanish Ministry (TIN2015-66680).
+
+
+%\newpage
+
+\section*{Appendix}
+
+Appendix I discusses an extension of our heuristics to the case in which lead time is deterministic and positive and Appendix II provides further details on our computational study.
+
+\subsection*{Appendix I: extension to the case in which lead time is deterministic and postive}
+\label{sec:appendix_I}
+
+We refer to a positive and deterministic leadtime $L$. For both the heuristics discussed in Section 4 the extension is relatively simple and proceeds as follows. 
+
+First, it is necessary to clarify if items are fresh when they are shipped or when they are delivered, but this assumption does not substantially affect our reasoning. 
+
+The inventory vector $\mathbf{I}_t$ must be expanded to accomodate $L$ additional stock categories, so the state dimension increases, but it increases linearly in $L$. If shelf life is $A$ the vector now features $A+L$ possible stock categories, where categories $1,\ldots, L$ now denote items that will be delivered in $L,L-1,\ldots,1$ periods, respectively. Categories $L+1,\ldots,L+A$ denote fresh items just delivered ($L+1$), items that are one period old ($L+2$), and so on and so forth. 
+
+When both heuristics try to determine the order quantity at period $t$, the initial inventory level in the expressions will have to be replaced by the inventory position, i.e. on hand stock plus pending orders not yet delivered, minus backorders. 
+
+Computation of the expected cost for the replenishment cycle starting at period $t$ and ending at period $t+k$ will have to take into account the fact that the next order placed in period $t+k+1$ will only be delivered in period $t+k+L$; in practice, this amounts to extending the replenishment cycle by $L$ periods and thus taking into account demand over lead time and associated expected costs (holding, penalty, etc) in periods $t+k+1,\ldots,t+k+L$. Depending on how we define our holding cost accounting --- i.e. if we should charge or not holding cost on pending orders not yet delivered --- holding cost may or may not be charged on stock categories $1,\ldots, L$. In any case, since the cost function is separable (Lemma \ref{lem:convexity}) and we are able to approximate individual $\text{E}[I^a_t]$ as discussed in Section \ref{sec:theoretical_results}, these are all easy adjustments to the two algorithms presented. 
+
+For a more detailed discussion on accommodating a deterministic lead time in the context of inventory systems similar to the one discussed in this work we redirect the reader to \cite{citeulike:7288002}, in particular to their Appendix A.1.
+
+\subsection*{Appendix II: further details on our computational study}
+\label{sec:appendix_II}
+
+\blue{In this section we provide a table with details on the demand patterns used in our computational experience (Table \ref{tab:patterns}) and a table of the 54 instances randomly selected in our test bed (Table \ref{tab:instances}).}
+
+\begin{table}[h]
+	\centering
+	\caption{Demand patterns}
+	\label{tab:patterns}
+\resizebox{0.9\columnwidth}{!}{
+
+
+	\begin{tabular}{l|lllllllllllllll}
+		& \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4} & \multicolumn{1}{c}{5} & \multicolumn{1}{c}{6} & \multicolumn{1}{c}{7} & \multicolumn{1}{c}{8} & \multicolumn{1}{c}{9} & \multicolumn{1}{c}{10} & \multicolumn{1}{c}{11} & \multicolumn{1}{c}{12} & \multicolumn{1}{c}{13} & \multicolumn{1}{c}{14} & \multicolumn{1}{c}{15} \\ \hline
+		STA  & 2                     & 2                     & 2                     & 2                     & 2                     & 2                     & 2                     & 2                     & 2                     & 2                      & 2                      & 2                      & 2                      & 2                      & 2                      \\
+		LCY1 & 0.54                  & 0.72                  & 0.96                  & 1.22                  & 1.54                  & 1.86                  & 2.2                   & 2.52                  & 2.82                  & 3.06                   & 3.24                   & 3.32                   & 3.32                   & 3.24                   & 3.06                   \\
+		LCY2 & 3.06                  & 3.24                  & 3.32                  & 3.32                  & 3.24                  & 3.06                  & 2.82                  & 2.52                  & 2.2                   & 1.86                   & 1.54                   & 1.22                   & 0.96                   & 0.72                   & 0.54                   \\
+		SIN1 & 2.42                  & 2                     & 1.58                  & 1.4                   & 1.58                  & 2                     & 2.42                  & 2.6                   & 2.42                  & 2                      & 1.58                   & 1.4                    & 1.58                   & 2                      & 2.42                   \\
+		SIN2 & 3.14                  & 2                     & 0.86                  & 0.4                   & 0.86                  & 2                     & 3.14                  & 3.6                   & 3.14                  & 2                      & 0.86                   & 0.4                    & 0.86                   & 2                      & 3.14                   \\
+		RAND & 2.61                  & 1.13                  & 0.41                  & 0.98                  & 0.02                  & 0.95                  & 1.36                  & 1.43                  & 2.8                   & 0.27                   & 0.6                    & 1.7                    & 0.16                   & 2.63                   & 1.06                   \\
+		EMP1 & 0.01                  & 0.25                  & 0.76                  & 2.33                  & 1.34                  & 2.44                  & 2.23                  & 1.24                  & 1.40                  & 1.81                   & 0.77                   & 1.46                   & 1.1                    & 0.46                   & 0.53                   \\
+		EMP2 & 0.23                  & 0.40                  & 1.18                  & 1.97                  & 0.82                  & 1.43                  & 2.54                  & 1.95                  & 3.77                  & 3.47                   & 1.30                   & 0.97                   & 1.6                    & 0.55                   & 0.95                   \\
+		EMP3 & 0.22                  & 0.58                  & 1.32                  & 0.72                  & 0.73                  & 0.99                  & 0.37                  & 0.91                  & 1.02                  & 0.57                   & 0.82                   & 1.59                   & 0.59                   & 2.41                   & 2.67                   \\
+		EMP4 & 0.24                  & 0.94                  & 0.32                  & 1.39                  & 2.26                  & 1.12                  & 1.11                  & 2.58                  & 1.45                  & 2.73                   & 3.23                   & 1.12                   & 1.07                   & 2.2                    & 0.58                  
+	\end{tabular}}
+\end{table}
+
+
+
+\begin{table}[h]
+	\centering
+	
+	\caption{The 54 instances randomly selected among the 270 in our test bed}
+	\label{tab:instances}
+	%\resizebox{!}{0.4\textheight}{ %tabular here}
+	\resizebox{1\columnwidth}{!}{
+		\begin{tabular}{lrrr|lrrr}
+\multicolumn{1}{l}{Demand pattern} & \multicolumn{1}{l}{Order cost level} & \multicolumn{1}{l}{Penalty cost} & \multicolumn{1}{l}{Waste cost} & \multicolumn{1}{|l}{Demand pattern} & \multicolumn{1}{l}{Order cost level} & \multicolumn{1}{l}{Penalty cost} & \multicolumn{1}{l}{Waste cost}  \\ \hline
+EMP1 	&	2.5	&	2	&	2	&	LCY1 	&	5	&	2	&	5	\\
+EMP1 	&	1	&	5	&	2	&	LCY1 	&	2.5	&	5	&	5	\\
+EMP1 	&	5	&	5	&	2	&	LCY1 	&	5	&	2	&	10	\\
+EMP1 	&	5	&	10	&	2	&	LCY1 	&	5	&	5	&	10	\\
+EMP1 	&	1	&	5	&	5	&	LCY2 	&	2.5	&	2	&	5	\\
+EMP1 	&	1	&	10	&	5	&	LCY2 	&	2.5	&	10	&	5	\\
+EMP1 	&	5	&	10	&	5	&	LCY2 	&	1	&	5	&	10	\\
+EMP1 	&	5	&	2	&	10	&	RAND 	&	2.5	&	10	&	5	\\
+EMP1 	&	5	&	5	&	10	&	RAND 	&	1	&	10	&	10	\\
+EMP1 	&	2.5	&	10	&	10	&	SIN1 	&	5	&	2	&	2	\\
+EMP2 	&	1	&	10	&	2	&	SIN1 	&	2.5	&	10	&	2	\\
+EMP2 	&	1	&	2	&	5	&	SIN1 	&	5	&	10	&	5	\\
+EMP2 	&	2.5	&	2	&	5	&	SIN1 	&	1	&	2	&	10	\\
+EMP2 	&	1	&	10	&	5	&	SIN1 	&	1	&	5	&	10	\\
+EMP2 	&	2.5	&	5	&	10	&	SIN2 	&	5	&	2	&	2	\\
+EMP3 	&	1	&	2	&	2	&	SIN2 	&	2.5	&	5	&	2	\\
+EMP3 	&	1	&	5	&	2	&	SIN2 	&	1	&	10	&	2	\\
+EMP3 	&	5	&	10	&	2	&	SIN2 	&	5	&	5	&	5	\\
+EMP3 	&	1	&	2	&	5	&	SIN2 	&	1	&	2	&	10	\\
+EMP3 	&	1	&	5	&	5	&	STA  	&	1	&	2	&	2	\\
+EMP3 	&	5	&	5	&	5	&	STA  	&	2.5	&	2	&	2	\\
+EMP3 	&	2.5	&	2	&	10	&	STA  	&	2.5	&	5	&	2	\\
+EMP3 	&	2.5	&	5	&	10	&	STA  	&	5	&	5	&	2	\\
+EMP3 	&	5	&	10	&	10	&	STA  	&	5	&	2	&	5	\\
+EMP4 	&	1	&	10	&	10	&	STA  	&	2.5	&	5	&	5	\\
+EMP4 	&	5	&	10	&	10	&	STA  	&	2.5	&	2	&	10	\\
+LCY1 	&	2.5	&	10	&	2	&	STA  	&	2.5	&	10	&	10	
+		\end{tabular}
+	}
+\end{table}
+
+%\begin{table}[h]
+%	\centering
+%	
+%	\caption{Instances}
+%	\label{tab:instances}
+%	%\resizebox{!}{0.4\textheight}{ %tabular here}
+%	\resizebox{!}{0.4\textheight}{
+%		\begin{tabular}{l|ccc}
+%			& \multicolumn{1}{l}{Order cost level} & \multicolumn{1}{l}{Penalty} & \multicolumn{1}{l}{Waste} \\ \hline
+%			EMP1 & 2,5                                & 2                           & 2                           \\
+%			EMP1 & 1                                  & 5                           & 2                           \\
+%			EMP1 & 5                                  & 5                           & 2                           \\
+%			EMP1 & 5                                  & 10                          & 2                           \\
+%			EMP1 & 1                                  & 5                           & 5                           \\
+%			EMP1 & 1                                  & 10                          & 5                           \\
+%			EMP1 & 5                                  & 10                          & 5                           \\
+%			EMP1 & 5                                  & 2                           & 10                          \\
+%			EMP1 & 5                                  & 5                           & 10                          \\
+%			EMP1 & 2,5                                & 10                          & 10                          \\
+%			EMP2 & 1                                  & 10                          & 2                           \\
+%			EMP2 & 1                                  & 2                           & 5                           \\
+%			EMP2 & 2,5                                & 2                           & 5                           \\
+%			EMP2 & 1                                  & 10                          & 5                           \\
+%			EMP2 & 2,5                                & 5                           & 10                          \\
+%			EMP3 & 1                                  & 2                           & 2                           \\
+%			EMP3 & 1                                  & 5                           & 2                           \\
+%			EMP3 & 5                                  & 10                          & 2                           \\
+%			EMP3 & 1                                  & 2                           & 5                           \\
+%			EMP3 & 1                                  & 5                           & 5                           \\
+%			EMP3 & 5                                  & 5                           & 5                           \\
+%			EMP3 & 2,5                                & 2                           & 10                          \\
+%			EMP3 & 2,5                                & 5                           & 10                          \\
+%			EMP3 & 5                                  & 10                          & 10                          \\
+%			EMP4 & 1                                  & 10                          & 10                          \\
+%			EMP4 & 5                                  & 10                          & 10                          \\
+%			LCY1 & 2,5                                & 10                          & 2                           \\
+%			LCY1 & 5                                  & 2                           & 5                           \\
+%			LCY1 & 2,5                                & 5                           & 5                           \\
+%			LCY1 & 5                                  & 2                           & 10                          \\
+%			LCY1 & 5                                  & 5                           & 10                          \\
+%			LCY2 & 2,5                                & 2                           & 5                           \\
+%			LCY2 & 2,5                                & 10                          & 5                           \\
+%			LCY2 & 1                                  & 5                           & 10                          \\
+%			RAND & 2,5                                & 10                          & 5                           \\
+%			RAND & 1                                  & 10                          & 10                          \\
+%			SIN1 & 5                                  & 2                           & 2                           \\
+%			SIN1 & 2,5                                & 10                          & 2                           \\
+%			SIN1 & 5                                  & 10                          & 5                           \\
+%			SIN1 & 1                                  & 2                           & 10                          \\
+%			SIN1 & 1                                  & 5                           & 10                          \\
+%			SIN2 & 5                                  & 2                           & 2                           \\
+%			SIN2 & 2,5                                & 5                           & 2                           \\
+%			SIN2 & 1                                  & 10                          & 2                           \\
+%			SIN2 & 5                                  & 5                           & 5                           \\
+%			SIN2 & 1                                  & 2                           & 10                          \\
+%			STA  & 1                                  & 2                           & 2                           \\
+%			STA  & 2,5                                & 2                           & 2                           \\
+%			STA  & 2,5                                & 5                           & 2                           \\
+%			STA  & 5                                  & 5                           & 2                           \\
+%			STA  & 5                                  & 2                           & 5                           \\
+%			STA  & 2,5                                & 5                           & 5                           \\
+%			STA  & 2,5                                & 2                           & 10                          \\
+%			STA  & 2,5                                & 10                          & 10                         
+%		\end{tabular}
+%	}
+%\end{table}
+
+
+%\vspace{2em}
+%\begin{landscape}
+%\end{landscape}
+
+
+\newpage
+
+\bibliography{publications}
+\bibliographystyle{tPRS}
+
+
+\end{document}  

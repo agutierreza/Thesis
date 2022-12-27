@@ -1,0 +1,452 @@
+%\documentclass[]{article}
+%\documentclass[procedia]{easychair}
+%
+%% This provides the \BibTeX macro
+%\usepackage{doc}
+%\usepackage{makeidx}
+%\usepackage[utf8]{inputenc}
+%
+%
+% \usepackage{graphicx}
+%%% or use the epsfig package if you prefer to use the old commands
+%\usepackage{epsfig}
+%
+%\usepackage{amsmath}
+%%\usepackage{algorithm}
+%\usepackage{t1enc}
+%%% The amssymb package provides various useful mathematical symbols
+%\usepackage{amssymb}
+%%% The amsthm package provides extended theorem environments
+%\usepackage{amsthm}
+%\usepackage{hyperref}
+%\newcommand{\blue}{\textcolor{blue}}
+%\newcommand{\rcomment}[1]{\hfill {\it\bf \small #1}}
+%\newcommand\ceil[1]{\lceil#1\rceil}
+%\newcommand{\tb}{\hspace{2ex}}
+%%\newcommand{\rcomment}[1]{\hfill {\it \small #1}}
+%\renewcommand{\epsilon}{\varepsilon}
+%
+%\newtheoremstyle{example}{\topsep}{\topsep}%
+%     {}%         Body font
+%     {}%         Indent amount (empty = no indent, \parindent = para indent)
+%     {\bfseries}% Thm head font
+%     {}%        Punctuation after thm head
+%     {\newline}%     Space after thm head (\newline = linebreak)
+%     {\thmname{#1}\thmnumber{ #2}\thmnote{ #3}}%         Thm head spec
+%
+%\theoremstyle{example}
+%\newtheorem{example}{Example}
+%
+%
+%
+%\usepackage{color}
+%\usepackage{algorithm}
+%\usepackage{algorithmic}
+%\usepackage[usenames,dvipsnames]{xcolor}
+%\usepackage{comment}
+%%\algrenewcommand{\algorithmiccomment}[1]{\hfill$\blacktriangleright$ #1}
+%%\newcommand{\blue}{\textcolor{blue}}
+%%\newcommand{\emt}{\textcolor{blue}}
+%\newcommand{\red}{\textcolor{red}}
+%\newcommand{\green}{\textcolor{green}}
+%
+%
+%
+%\def\procediaConference{ICCS 2017}
+% 
+%\title{A model for optimal fleet composition of vessels for offshore wind farm maintenance}
+%\titlerunning{On fleet composition for OWF maintenance}
+%
+%\author{
+%	Alejandro Gutierrez-Alcoba\inst{1}\thanks{Alejandro Gutierrez-Alcoba is a fellow of the Spanish FPI programme, granted by the Ministry of Economy, Industry and Competitiveness. This paper has been supported by The Spanish Ministry (TIN2015-66680) and Seneca Foundation (19241/PI/14) of the Murcia region, in part financed by the European Regional Development Fund (ERDF).}%\thanks{Designed and implemented the class style}
+%	\and
+%	Gloria Ortega\inst{2}%\thanks{Did numerous tests and provided a lot of suggestions}
+%	\and
+%	Eligius M.T. Hendrix\inst{1}
+%	\and
+%%	Dag Haugland\inst{3}
+%%	\and
+%	Elin E. Halvorsen-Weare\inst{3}
+%	\and
+%	Dag Haugland \inst{4}
+%}
+%
+%\institute{
+%	Computer Arquitecture Dpt., Universidad de M\'alaga,
+%	Málaga, Spain\\
+%	\email{agutierrez@ac.uma.es;eligius@uma.es}
+%	\and
+%    Informatics Dpt.,
+%	University of Almería, Agrifood Campus of Int. Excell. (ceiA3),
+%	Almería, Spain\\
+%	\email{gloriaortega@ual.es}\\
+%	\and
+%	Department of Maritime Transport Systems, MARINTEK,
+%	%P.O. Box 4125 Valentinlyst, NO-7450
+%	Trondheim, Norway\\
+%	\email{elin.halvorsen-weare@marintek.sintef.no }\\
+%	\and
+%	Department of Informatics, University of Bergen,
+%	P.O. Box 7803, 5020 Bergen,
+%	Norway\\
+%	\email{dag.haugland@uib.no}\\
+%}
+%\authorrunning{Gutierrez-Alcoba, et al.}
+%
+%\begin{document}	
+%%opening
+%\maketitle
+%%\author{Authors}
+%\keywords{Offshore Wind Farms, Decision Support System, Fleet composition, Maintenance planning}
+%
+%
+%%\date{}
+%
+%
+%\begin{abstract}
+%We present a discrete optimisation model that chooses an optimal fleet of vessels to support maintenance operations at Offshore Wind Farms (OFWs). The model is presented as a bi-level problem. On the first (tactical) level, decisions are made on the fleet composition for a certain time horizon. On the second (operational) level, the fleet is used to optimise the schedule of operations needed at the OWF, given events of failures and weather conditions.
+%\end{abstract}
+%\begin{keyword}
+%fleet composition \sep maintenance \sep wind farm
+
+%\end{keyword}
+\newcommand\ceil[1]{\lceil#1\rceil}
+\chapter{A model for optimal fleet composition of vessels for offshore wind farm maintenance} % top level followed by section, subsection
+\label{Chap:iccs2017}
+
+\ifpdf
+    \graphicspath{{X/figures/PNG/}{X/figures/PDF/}{X/figures/}}
+\else
+    \graphicspath{{X/figures/EPS/}{X/figures/}}
+\fi
+
+
+\section{Introduction}
+
+
+The offshore wind energy industry is expected to continue its growth tendency in the near future. The European Wind Energy Association expects in its Central Scenario by 2030 a total installed capacity of 66 GW of offshore wind in the UE \cite{WES2030}.
+
+
+Offshore wind farms (OWFs) are large scale infrastructures, requiring large fleets able to perform operations and maintenance (O\&M) activities in the installed turbines, constituting one of the major costs of running an OWF installation. The fleet makes the installations  dependent on non-renewable energy resources. Therefore, optimising the efficiency of the resources used for the O\&M activities of an OWF becomes extremely important in order to make them economically viable and to reduce CO2 emissions.
+%Conference paper cite: \cite{Stalhane2016}
+
+
+%\section{Literature Review}
+%\label{litreview}
+
+Recent deterministic and stochastic model formulations for vessel composition and maintenance optimization  can be found in \cite{Gundegjerde2015} and \cite{HALVORSENWEARE2013}. A recent literature review on DSS for OWF's is given by \cite{hofmannrev}.
+%
+In~\cite{EJOR2016}, a model for maintenance routing
+and scheduling at offshore wind farms based on the Dantzig-Wolfe decomposition method has been implemented.
+In that work, a mixed integer linear program is solved for each subset of turbines to generate all  feasible routes and maintenance schedules for the vessels for each period.
+The routes take several constraints into account, such as weather conditions, the availability of vessels,
+and the number of technicians available at the operation and maintenance base.
+%
+In~\cite{Stalhane2016357}, a two-stage stochastic programming model is presented to determine a cost-optimal fleet size and mix for
+O\&M activities at offshore wind farms for the total expected lifetime of the OWF. For that, the study considers time periods fixed to three months.
+
+
+
+
+This chapter presents a model for the use of vessels in OWF maintenance. The lower level decisions are based on a two shift a day period, that takes weather conditions into account. Although breakdown events and weather circumstances (wind) are stochastic events, they are handled in the model by a scenario approach in a deterministic way to come to a (lower) estimate of the expected costs of the fleet composition plan. This deterministic approach generates a lower bound for costs in the the operational stage and facilitates finding the optimal fleet of vessels for a long time horizon using small time periods (small bucket approach). The model considers a set of types of maintenance activities that are needed to be performed in an OWF and selects a set of bases and vessel types and finds, for each scenario, a schedule of operations for the planning horizon minimising costs. The challenge for this type of models is that the number of integer and binary variables becomes large complicating the solution time. 
+
+The rest of this chapter is organised as follows. Section \ref{sec:problemdescriptionICCS} describes  the properties of the problem of operating an OWF and selecting a fleet to support their maintenance activities in detail. Section \ref{sec:mathematicalformulationICCS} sets the mathematical formulation of the model, describing the objective function and the constraints associated to the tactical and the operational decisions. Section \ref{sec:computationalstudyICCS} presents the computational study that has been carried out to test the model. Finally, Section \ref{sec:conclusionICCS} concludes this chapter.
+
+
+\section{Problem definition}
+\label{sec:problemdescriptionICCS}
+
+This section describes the maintenance planning problem to be solved. The decision problem is related to a fleet of vessels and the maintenance activities that are supported at an offshore wind farm during a planning horizon. The aim is to find an optimal fleet of vessels and a collection of maintenance activities to be performed on the wind turbines. The model is based on the more extensive model description of a fleet size and mix decision model in~\cite{Elin}. That model contains a more detailed description of the operational scheduling dealing with each individual action. The model in the current paper also takes a small bucket approach of scheduling, distinguishing periods of 12 hours, but aggregates to a number of activities in each period.
+
+Maintenance activities are divided into \emph{preventive} and \emph{corrective} ones. Each activity type has an estimated duration, cost, and requires a number of maintenance technicians. Preventive maintenance activities are meant to prevent failures and prolong the lifetime of wind turbines. Examples of preventive activity types include: visual inspection, changing of consumables, oil sampling, and tightening of bolts \cite{obdam}. Corrective maintenance activities are needed to repair wind turbines that have suffered a breakdown.
+
+Preventive activities to be scheduled are determined by the decision maker beforehand, who fixes a number of preventive activities of each type that need to be performed throughout the planning horizon. Corrective activities are only needed after a specific failure occurs in a wind turbine. There is a downtime cost associated to the lack of electricity production in turbines during the execution of a maintenance activity and while a breakdown continues. %Hence the importance of performing corrective activities as failures occur, or performing preventive maintenance activities when the wind is lower, trying to avoid periods in which the turbines can produce more electricity
+
+Preventive maintenance activities should be planned somewhere within the time horizon. The corrective activity types are generated beforehand. The planner is confronted in each scenario with failure types. There is one-to-one correspondence between failures types and corrective activity types. The instrument available to the planner for handling activities is a \emph{bundle}. It includes the description of a trip by a vessel $v$ from base $k$ that contributes possibly to one or more activities.
+
+
+To perform these maintenance activities, a fleet of vessels is needed. Vessel types have properties such as the type of maintenance activities they can perform, capacity for technicians, a yearly depreciation cost over the planning horizon and the speed they can sail.  Every vessel is associated with a base, from which they travel to the wind farm to perform maintenance activities. Each base has a certain vessel capacity, a capacity to accommodate technicians, an associated cost and coordinates which provide their distance to the wind farm. 
+
+
+
+The decision maker selects a number of candidate bases that can be used and a number of vessels of each type associated to them, subject to the particular conditions of each base. Each vessel type is able to support a particular set of bundles, considering their properties. A bundle consists of one or several maintenance activities to be performed at the OWF that fits in a shift.  Some activity types do not require the vessel to be present at the turbine. In that case it is possible to perform several activities in parallel in a single time period. It is irrelevant whether  a bundle contains activities that run in parallel or sequentially, as long as they meet the time constraints of a period and the vessel type can accommodate enough technicians to perform the activities. Moreover, some activity types take longer than the time available in a single shift. These long activities are split into smaller chunks. The model keeps track of how much time has been invested in each activity type to control when they are finished. If a long activity is initiated in one period, it does not necessarily have to be continued in the following. However, for corrective activities, downtime costs are incurred for the next shifts until the activity is finished and the failure in the turbine is solved.
+
+In the model in the current chapter, decisions are taken on two levels: the first level decides which bases to use and which vessels should be available during the time horizon period under consideration. On the second level, the optimal operation decisions for each scenario are determined including which maintenance activities to support by which vessel type in every period of the planning horizon and for every possible scenario. Scenarios
+consist of weather conditions preventing use of vessels for maintenance, availability of personnel and the possible failures of turbines that require corrective maintenance activity types.
+
+
+
+\section{Mathematical formulation}
+\label{sec:mathematicalformulationICCS}
+
+In this section, we present the two-level deterministic optimisation model to generate and evaluate the optimal fleet of vessels to perform maintenance activities at offshore wind farms. The following symbols are used to describe the mathematical optimisation model.
+
+
+%USE THIS PARAGRAPH LATER: Implicitly, the individual activity schedule follows from a FIFO approach, where the first activity that has been started is the first to be ended.
+
+%\scalebox{1}{
+\begin{tabular}{ll}
+	\multicolumn{2}{l}{Sets}\\
+	%K
+	%V
+	$\mathcal{K}$ 				& 	Set of bases \\
+	$\mathcal{V}_k$ 				& 	Set of vessel types at base $k$ \\
+	$\mathcal{S}$ 				& 	Set of scenarios \\	
+%	$\mathcal{T}$ 				& 	Set of time periods in the planning horizon \\	
+	$\Gamma$ 					&	Set of maintenance activity types \\
+	$\mathcal{NP}$				&	Subset of planned preventive maintenance activity types, \\
+	                            & $\mathcal{NP}\subset\Gamma$ \\
+	$\mathcal{NC}$				&	Subset of corrective maintenance activity types, $\mathcal{NC}\subset\Gamma$ \\
+	$\mathcal{P}$				&	Set of all possible bundles\\
+	$\mathcal{P}_{kv}$			&	Set of possible bundles for a vessel of type $v$ from base $k$\\
+%\end{tabular}
+
+
+
+%\begin{tabular}{ll}
+	\\
+  \multicolumn{2}{l}{Parameters}\\
+  
+	$T$ & Number of periods (days) in the planning horizon\\
+	$F_{k}$ 	&	Fixed cost per year of operating base $k$\\
+	$G_{v}$ 	&	Charter or depreciation cost for using vessel type $v$ over the \\
+				&    complete horizon\\
+	$D_{st}$	&	Loss due to downtime of performing a maintenance  $s$\\ 
+				& activity in scenario in period $t$ \\
+	$C_{kvp}$ 	&	Cost of executing bundle $p$ from base $b$ and a vessel of type\\
+				& $v$\\
+	$CP_i$ 		&	Penalty cost for not executing a preventive maintenance\\
+				& activity of type $i\in \mathcal{NP}$\\
+	%$NI_{i}$ 		&	Number of hours required by preventive maintenance activity $i$\\
+	$N_{i}$ 		&	\parbox[t]{10cm}{Number of hours required by maintenance activity of type}\\
+					& $i\in \Gamma$ during the time horizon\\
+	$PP_{i}$ 		&	Number of planned preventive maintenance activities of type\\
+					& $i\in \mathcal{NP}$\\	
+	$H_{i t}$ 		&	\parbox[t]{10cm}{Expected hourly downtime cost for a preventive  activity of type $i\in \mathcal{NP}$ in period $t$}\\
+	$M_{k}$ 		&	Number of maintenance technicians available at base $k\in K$\\
+					& in each shift\\
+	$MP_{p}$ 		&	\parbox[t]{10cm}{Required maintenance technician personnel to elaborate}\\
+					& bundle $p$\\
+	$Q_{kv}$ 		& \parbox[t]{10cm}{Maximum number of vessels type $v$ that can operate from}\\
+					& base $k$\\
+	$B_{i}$ &	Hours spent on an activity of type $i$ in one shift\\
+	$A_{ip}$ 		&	Number of activities of type $i$ in bundle $p$\\
+	$P_s$ 		&	Probability of scenario $s$\\
+	$Y_{its}$ 	& 	\parbox[t]{10cm}{Number of failures of type $i\in\mathcal{NC}$ accumulated in periods}\\
+				& $1,\ldots,t$ in scenario $s$.
+	\\
+\end{tabular}
+%}
+
+\begin{tabular}{ll}
+	\\
+	\multicolumn{2}{l}{Tactical decision variables}\\
+	$y_{k} \in \{0,1\}$ 	& Equal to 1 if base $k$ is used, 0 otherwise\\
+	$x_{kv} \in\{0,\ldots,Q_{kv}\}$ &	Number of vessels type $v$ operated from base $k$\\
+	\\
+	%
+\end{tabular}	
+
+\begin{tabular}{ll}	
+	\multicolumn{2}{l}{Operational decision variables}\\
+
+	%$\delta_k$	&	Equal to 1 if base $k\in K$ is used, 0 otherwise\\
+	$w_{its}\in\mathbb{Z}^+$	&	\parbox[t]{10cm}{Number of corrective maintenance activities of type  $i \in\mathcal{NC}$ supported during period $t$ in scenario $s$}\\
+	$q_{its} \in\mathbb{Z}^+$	&	\parbox[t]{10cm}{Number of preventive maintenance activities of type $i \in \mathcal{NP}$ supported during period $t$ in scenario $s$}\\
+	$u_{pts}\in\mathbb{Z}^+$ &	\parbox[t]{10cm}{Number of vessels executing bundle $p$ during period $t$ in scenario $s$}\\
+	$r_{its}\in\mathbb{Z}^+$	&	\parbox[t]{10cm}{Number of corrective maintenance activities of type  $i \in\mathcal{NC}$ that are not (yet) completed in scenario $s$ in period $t$}\\
+	$z_{i s}\in\mathbb{Z}^+$	&	\parbox[t]{10cm}{Number of preventive maintenance activities of type $i \in \mathcal{NP}$ not completed in scenario $s$ at the end of the time horizon}\\
+								\\	
+\end{tabular}
+
+In order to solve the model, it is necessary to predefine the bounds on the variables as sharp as possible. Sharp bounds facilitate the pre-solving operations of an LP solver that filter out those variables that have a value of zero and those constraints that are not binding.
+
+
+\begin{align}
+\label{eq:bound1ICCS}
+  0 \leq x_{kv} \leq Q_{kv},				&\quad	\forall k,v\\
+\label{eq:bound2ICCS}
+  0 \leq u_{pts} \leq \sum\limits_{k\in\mathcal{K}} \sum\limits_{v\in\mathcal{V}_k} Q_{kv} &\quad \forall p,s,t  \\
+\label{eq:bound3ICCS}
+0 \leq w_{its} \leq \sum\limits_{k} \sum\limits_{v} Q_{kv}\max\limits_{p\in \mathcal{P}_{kv}}A_{ip} 	&\quad i \in \mathcal{NP} \\
+\label{eq:bound4ICCS}  	
+0 \leq q_{its} \leq \sum\limits_{k} \sum\limits_{v} Q_{kv}\max\limits_{p\in \mathcal{P}_{kv}}A_{ip} 	&\quad i \in \mathcal{NC} \\
+\label{eq:bound5ICCS}
+  0 \leq r_{i st}\leq Y_{i ts} &\quad	\forall i\in\mathcal{NC},s,t\\
+\label{eq:bound6ICCS}
+   0 \leq z_{i s}\leq PP_{i} &\quad	\forall i\in\mathcal{NP},s
+\end{align}
+
+
+
+The value of parameter $Q_{kv}$ is an upper bound on the number of vessels that can be used from each base. Therefore, the number of bundles that can be performed in a shift for a particular scenario is bounded by the total capacity of vessels for the considered bases. The number of preventive activities not performed at the end of the horizon is bounded by the total number of planned preventive activities $PP_i$. The number of corrective activities not finished at a certain shift is bounded above by the total occurrences of failures $Y_{its}$ thus far.
+
+
+\subsection{Objective function}
+
+The objective is to minimise the fixed costs of operating the bases and the charter cost of the selected vessels, the costs of all the bundles executed throughout the planning horizon, the downtime costs associated with the execution of maintenance activities or persistent failures and the penalty costs of preventive and corrective activity types that are not finished within the planning horizon:
+%
+\begin{align}
+\label{eq:objfunICCS}
+ \min & 	\sum\limits_{k\in \mathcal{K}} F_k y_k  %1
+	      + \sum\limits_{k\in \mathcal{K}}\sum\limits_{v\in\mathcal{V}_k} G_v x_{kv} %2
+	      + \sum\limits_{s\in\mathcal{S}} P_{s} \left(\sum\limits_{k\in\mathcal{K}} \sum\limits_{v\in\mathcal{V}_k} \sum\limits_{p\in\mathcal{P}_{kv}} \sum\limits_{t=1}^T C_{kvp}u_{pts}\right) +\\ \nonumber
+	    & \sum\limits_{s\in\mathcal{S}} P_{s} \left(\sum\limits_{i\in \mathcal{NP}}  \sum\limits_{t=1}^TH_{i t}B_{i}q_{its}
++ \sum\limits_{i \in\mathcal{NC}} \sum\limits_{t=1}^T D_{st} r_{i st} +  \sum\limits_{i \in\mathcal{NP}} CP_i z_{i s} + \sum\limits_{i \in\mathcal{NC}} CP_i r_{isT}\right)%6
+\end{align}
+%
+The first two terms of the objective function (\ref{eq:objfunICCS}) cover the costs for the tactical decisions: which bases and vessels will be used. The first term refers to the fixed costs for operating the chosen bases during the complete planning horizon. The second defines the charter cost for the available fleet of vessels during the complete planning horizon.
+
+The following terms cover the expected operational costs of the model. Therefore, the cost of each scenario is  multiplied by its probability. The third term of the objective function (\ref{eq:objfunICCS}) determines the cost of operating the bundles during the planning horizon. Terms four and five describe the downtime costs of preventive and corrective activity types, respectively. While the downtime costs for preventive activity types are only incurred while an activity is taking place on a turbine, downtime for corrective activity types initiate from the period the breakdown occurs and continues until the period in which it is finished. The last two terms are related to the penalty costs. Term six is the penalty incurred for the preventive maintenance activity types that are not performed within the planning horizon while term seven is the penalty for corrective ones.
+
+
+
+\subsection{Constraints for tactical decisions}
+
+There is only one constraint on the tactical decisions:
+%
+\begin{align}
+\label{eq:const1:maxVkfromKICCS}
+  x_{kv} \leq Q_{kv}y_{k}  	&	&	\forall k, v
+\end{align}
+%
+The constraint describes the usual relation that base $k$ should be in use, if one wants to station vessels there. One can add limitations on which bases should be used. The tactical decision directly intervenes in the possibilities of the operational planning.
+
+\subsection{Constraints on operational decisions}
+Constraints on the operational decisions are expressed in terms of the following inequalities:
+\begin{align}
+\label{eq:const1ICCS}
+  \sum\limits_{p\in \mathcal{P}_{kv}} u_{pts}\le x_{kv}, 			&\quad		\forall k,v,t,s\\
+  \label{eq:const4ICCS}
+  \sum\limits_{v\in V_k}\sum\limits_{p\in \mathcal{P}_{kv}} MP_{p}u_{pts} \leq M_{k},				&\quad	\forall k,s,t\\
+  \label{eq:const5ICCS}
+   \sum\limits_{p}^{\mathcal{P}} A_{ip}u_{pts} - q_{its}\geq 0,				&\quad	i\in \mathcal{NP}, \forall s, t\\
+   \label{eq:const6ICCS}
+   \sum\limits_{p}^{\mathcal{P}} A_{ip}u_{pts} - w_{its}\geq 0,				&\quad	i\in \mathcal{NC}, \forall s, t\\
+\label{eq:const:rwICCS}
+  \frac{N_{i}}{B_{i}}(Y_{its}-r_{its}) \leq  \sum\limits_{\tau=1}^t \sum\limits_{p \in \mathcal{P}} w_{i\tau s}\leq \ceil{\frac{N_{i}}{B_{i}} Y_{its}}, 		 &\quad	\forall s,i \in\mathcal{NC}, t=1,\ldots,T\\
+\label{eq:const3ICCS}
+   N_{i}z_{is}+ \sum\limits_{t=1}^T B_{i}q_{its}\ge N_{i}PP_{i}, 		&\quad	\forall i \in \mathcal{NP},s
+\end{align}
+%
+Constraint \eqref{eq:const1ICCS} limits the operations on the availability of sufficient vessels at each base.
+Constraint \eqref{eq:const4ICCS} describes the limits on operations due to available personnel.
+Constraints \eqref{eq:const5ICCS} and \eqref{eq:const6ICCS} link the assignment of the activities depending on the the planned bundles and availability of vessels.
+Constraint \eqref{eq:const:rwICCS} keeps track of the number of corrective activities not finished (lower bound) and assures that the number of activities performed for a single type does not exceed the number of turbines having that failure type (upper bound). One should round up the number $\frac{N_i}{B_i}Y_{its}$. If this is not done, the constraint cannot allow the last chunk of a large activity type to be performed until another failure of the same type occurs and consequently $Y_{its}$ increases.
+Finally, constraint \eqref{eq:const3ICCS} describes the number of preventive activities for each type that are not finished in scenario $s$.
+
+Implicitly, constraints \eqref{eq:const:rwICCS} and \eqref{eq:const3ICCS} imply that the individual activity schedule follows from a FIFO approach for preventive and corrective activity types, where the first activity that has been started is the first to be ended.
+
+
+
+%Constraints \eqref{eq:constsomany} and \eqref{eq:only1fori} guarantee that in one shift at most one operation is contributing to each activity.
+
+\section{Computational study}
+\label{sec:computationalstudyICCS}
+
+Discussing the validity of the model, it is worthwhile to mention that in principle the lower level operational planning cost provides a lower bound for the incurred cost due to failures and downtime. By formulating the operational activities in a one-shot model, in principle all the scenario is known beforehand and earlier activities can be planned based on knowledge of failures that will occur later. This makes the planning in principle cheaper than what is possible in reality. On the other hand, due to the  nature of the variable $r_{its}$, there is a tension in the optimal outcome to start repairing a failure as soon as possible by a corrective activity. We will investigate the amount of underestimation for specific realistic data in future work confronting the optimal MILP outcome of the lower level for scenarios with a simulated more realistic behaviour.
+
+The complete bi-level model described in Section \ref{sec:mathematicalformulationICCS} has been implemented using the GAMS interface \cite{gams} and has been solved using the CPLEX solver, setting the optimality gap at 10\%. The tests have been carried out on a (DELL Optiplex 390) computer with an Intel i3-2110,3.3 GHz processor, (8 GB) RAM running in Windows. The instances have been generated in Matlab using cost data from \cite{obdam}.
+
+\subsection{Description of a case study}
+\label{subsec:casestudy}
+In this section we describe the case study that has been considered to conduct experiments to test the model presented in this chapter.
+
+We consider an OWF consisting of 125 turbines. The planning horizon is one year and the periods represent 12 hour shifts and include a return trip from the base the vessel is located to the OWF and a bundle of activities. In practical terms there are 730 periods. There are three available bases $B_1,B_2,B_3$ around the OWF, each of which can accommodate up to 36 technicians and they are located at 110, 61  and 86 kilometres respectively from the OWF. The cost of using each of them, for the entire time horizon is 2, 6 and 7 million monetary units (mu) respectively.
+
+Four types of vessels are considered: $V_1,V_2,V_3,V_4$. Each base has space to allow two vessels of type $V_1$, two of type $V_2$, four of type $V_3$ and one of type $V_4$. Vessel type $V_4$ is able to accommodate up to 30 technicians, while the rest has space for only 12. The cost of having a vessel during the whole planning horizon for vessel types $V_1$, $V_2$, $V_3$ and $V_4$ is, respectively, 122,4000, 2,500,000, 750,000 and 7,200,000 mu. Vessel types $V_1$ and $V_2$ can travel at a speed of 20 knots, while vessel types $V_3$ and $V_4$ can travel at 40 knots. In practical terms this means that vessel types $V_1$ and $V_2$ require about 5.94, 3.3 and 4.64 hours to perform a return trip between bases $B_1$, $B_2$ and $B_3$ respectively while vessel types $V_3$ and $V_4$ would require half of that time, allowing more time to perform activities in each shift.
+
+\begin{table}[]
+	\centering
+	\caption{Possible efficient bundles that can be performed from each base-vessel combination}
+	\label{tab:bundles}
+	\begin{tabular}{llll}
+		$k$  & $v$ &  $\mathcal{P}$                                                                                                                  &  \\
+		$B_1$ & $V_1$       & $\{(0,0,4,0)\}$                                                                                                                  &  \\
+		$B_1$ & $V_2$       & $\{(0,0,4,0)\}$                                                                                                                  &  \\
+		$B_1$ & $V_3$       & $\{(3,0,0,0),(0,2,0,0),(0,0,4,0),(0,0,0,1)\}$                                                                                    &  \\
+		$B_1$ & $V_4$       & $\{(6,0,0,0),(3,3,0,0),(2,2,2,0),(3,0,3,0),(0,3,3,0),(0,0,6,0),$\\
+			  & 			& $(0,0,0,1)\}$                                                      										 &  \\
+		$B_2$ & $V_1$       & $\{(3,0,0,0),(0,2,0,0),(0,0,4,0),(0,0,0,1)\}$                                                                                    &  \\
+		$B_2$ & $V_2$       & $\{(3,0,0,0),(0,2,0,0),(0,0,4,0),(0,0,0,1)\}$                                                                                    &  \\
+		$B_2$ & $V_3$       & $\{(3,0,0,0),(0,2,0,0),(0,0,4,0),(0,0,0,1)\}$                                                                                    &  \\
+		$B_2$ & $V_4$       & $\{(6,0,0,0),(3,3,0,0),(0,6,0,0),(2,2,2,0),(3,0,3,0),(0,3,3,0),$\\
+			  &				& $(0,0,6,0),(0,0,0,1)\}$ &  \\
+		$B_3$ & $V_1$       & $\{(3,0,0,0),(0,0,4,0),(0,0,0,1)\}$                                                                                              &  \\
+		$B_3$ & $V_2$       & $\{(3,0,0,0),(0,0,4,0),(0,0,0,1)\}$                                                                                              &  \\
+		$B_3$ & $V_3$       & $\{(3,0,0,0),(0,2,0,0),(0,0,4,0),(0,0,0,1)\}$                                                                                    &  \\
+		$B_3$ & $V_4$       & $\{(6,0,0,0),(3,3,0,0),(2,2,2,0),(3,0,3,0),(0,3,3,0),$\\
+			  &				& $(0,0,6,0),(0,0,0,1)\}$                                                      &
+	\end{tabular}
+\end{table}
+
+There are two preventive activity types $A_1,A_2$ and two corrective activity types $A_3, A_4$. All vessel types are able to perform all the activity types considered. Activity type $A_4$ requires the vessel supporting the operation to be present at the turbine while the activity is performed, whereas activity types $A_1,A_2,A_3$ can be run in parallel. The vessel drops a group of technicians at each turbine that is going to be supported during the shift. The time required to perform activity types $A_1$, $A_2$, $A_3$ and $A_4$ is 60 , 100 , 3 and 7.5 hours respectively. The maximum time per period and turbine that a group of technicians can support an activity type is 6 hours. Consequently, only activities of type $A_3$ can be performed in a single period. The penalty cost for not executing a preventive activity type is 10 million mu. For corrective activities of type $A_3$ the cost is 50,000 mu, and for type $A_4$, the penalty cost rises to 500,000 mu.
+
+A series of bundles of activities that each vessel type can perform from each base is presented in Table \ref{tab:bundles}. Bases closer to the OWF and faster vessel types are able to spend more time at the OWF during a 12 hours period, facilitating more activities to take place in a single bundle and a larger set of different bundles. The cost of a bundle depends on the type of vessel used and the base of departure (see Table \ref{tab:costbundle}), but not on the performed activity.
+
+For our case study, there are 125 planned activities of type $A_1$ and 60 of type $A_2$. The number of corrective activity types corresponds to the number of failures of the turbines and depends on the scenario. A scenario consists of the events of the failures of the turbines and the wind speed at the OWF for every period. Failures that require corrective activity types $A_3$ and $A_4$ follow a binomial distribution. The rate of failures for a corrective activity of type $A_3$ is 5 times per turbine per year, and 3 times per turbine a year for failures that require an activity of type $A_4$. Wind conditions are not simulated. Instead, they are taken from historical weather data. For each scenario, a report file containing a year of wind speed data of the OWF area is picked randomly.
+
+
+
+
+\begin{table}[]
+\centering
+\caption{Bundle costs for each base-vessel combination. Bundles with the same base-vessel combination have the same costs.}
+\label{tab:costbundle}
+\begin{tabular}{lll|lll|lll}
+$k$  & $v$ & $C_{kvp}$ & $k$  & $v$ & $C_{kvp}$ & $k$  & $v$ & $C_{kvp}$  \\
+$B_1$ & $V_1$       & 2310    & $B_2$ & $V_1$       & 1281    & $B_3$ & $V_1$       & 1806    \\
+$B_1$ & $V_2$       & 2310    & $B_2$ & $V_2$       & 1281    & $B_3$ & $V_2$       & 1806    \\
+$B_1$ & $V_3$       & 3300    & $B_2$ & $V_3$       & 1830    & $B_3$ & $V_3$       & 2580    \\
+$B_1$ & $V_4$       & 6600    & $B_2$ & $V_4$       & 3660    & $B_3$ & $V_4$       & 5160
+\end{tabular}
+\end{table}
+
+\subsection{Optimal fleet of vessels}
+
+The case study presented in \ref{subsec:casestudy} of the bi-level model with only 3 scenarios consists of an  MILP problem with about 50,000  constraints and more than 300,000 variables. The pre-solve operation using the data of the instance, eliminates many rows and columns, but leaves a relatively complex problem to be solved. In fact, that instance exceeds the 24 hour limit of executing time. For two scenarios, the optimal fleet given by the solver was to operate three vessels of type $V_3$ from base $B_1$. The optimal solution value given by the solver was 10,321,000 mu.
+
+
+The costs associated to the tactical level add up to 4,250,000 mu; that is the cost of maintaining base $B_1$ and operating the selected vessels. The execution of patterns incurred another 5,227,200 mu, leaving the rest 843,800 mu corresponding to downtime costs, incurred during breakdowns and maintenance activities.
+In terms of electricity production this amounts to the equivalent of losing the potential of about one turbine during the time horizon.
+
+\subsection{Performance of the model}
+For testing the performance of the model, we have run the case described in \ref{subsec:casestudy}, varying the number of scenarios and the time horizon. We have considered the different instances of the case study problem taking one, two and three scenarios. For the time horizon 90 , 180 and 365 days of planning have been considered. The number of constraints and variables for each case is laid out in Table \ref{tab:constnvar}. The execution times for each of theses instances is presented in Table \ref{tab:time}, expressed in minutes. These figures increase rapidly in the number of considered scenarios and the time horizon. The instance consisting on 365 days for the time horizon (730 periods) and three scenarios did not reach the set optimality gap in 24 hours of execution.
+
+\begin{table}[h!]
+\centering
+\caption{Number of constraints and variables for different instances of the model varying the number of scenarios ($\left|\mathcal{S}\right|=1,2,3$) and the time horizon ($T=90,180,365$)}
+\label{tab:constnvar}
+\begin{tabular}{l|cccccc}
+$\left|\mathcal{S}\right|$ \textbackslash T & \multicolumn{2}{c}{90}                                    & \multicolumn{2}{c}{180}                                   & \multicolumn{2}{c}{365}                                   \\
+                                            & \multicolumn{1}{l}{N const.} & \multicolumn{1}{l}{N var.} & \multicolumn{1}{l}{N const.} & \multicolumn{1}{l}{N var.} & \multicolumn{1}{l}{N const.} & \multicolumn{1}{l}{N var.} \\ \hline
+1                                           &  4,162                         & 25,767                      & 8,304                         & 51,507                      & 16,814                        &  104,417                     \\
+2                                           &  8,304                         & 51,509                      & 16,584                        &  102,989                     & 33,602                        &  208,809                     \\
+3                                           & 12,440                        & 77,251                      & 24,864                        &  154,471                     & 50,396                        & 313,201                    
+\end{tabular}
+\end{table}
+
+
+
+\begin{table}[h!]
+\centering
+\caption{Execution times, in minutes, for different instances of the model varying the number of scenarios ($\left|\mathcal{S}\right|=1,2,3$) and the time horizon ($T=90,180,365$)}
+\label{tab:time}
+\begin{tabular}{c|ccc}
+$\left|\mathcal{S}\right|$ \textbackslash T                           & \multicolumn{1}{l}{90} & \multicolumn{1}{l}{180} & \multicolumn{1}{l}{365} \\ \hline
+1 & 2                       & 5                        & 49                          \\
+2 & 3.5                        & 12                          & 203                          \\
+3 & 11                        & 57                          & n/a                        
+\end{tabular}
+\end{table}
+
+\section{Conclusion}
+\label{sec:conclusionICCS}
+This chapter presents a discrete optimisation model for selecting an optimal fleet of vessels to support maintenance operations at OFW's. To determine the optimal fleet and their operations, the model has been presented as a bi-level problem. At the first (tactical) level, the model determines the optimal fleet. At the second (operational) level, it schedules operations needed at the OWF throughout the time horizon. A case study has been developed to test the performance of the model, analysing the optimal fleet of vessels given by the solver. The performance tests show the complexity of the presented model for large time horizons.
+
+Future work includes considering weather circumstances in the model that may limit the use of vessels for maintenance operations, such as wind speed, wave height and visibility. The generation of bundles for base-vessel configurations will be revisited, in order to automatise it. One of our questions is how to solve the model presented in a more efficient way, for a large number of scenarios. Moreover, we will investigate the amount of underestimation for specific realistic data confronting the optimal MILP outcome of the lower operational level for scenarios with a simulated more realistic behaviour. 
+
+
+%\bibliographystyle{plain}
+%\bibliography{bibOWF}
+
