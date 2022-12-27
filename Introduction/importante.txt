@@ -1,0 +1,1 @@
+http://books.google.es/books?id=iqSWDaSFNvkC&pg=PA3&lpg=PA3&dq=High+Performance+Computing:+Technology,+Methods+and+Applications&source=bl&ots=0NPRunHB73&sig=fSKyEDOhAA-lZev9L5_SI9EvxSo&hl=es&sa=X&ei=1UAeU52sCe2f7AaEh4GQBg&ved=0CEMQ6AEwAg#v=snippet&q=optimizations&f=false

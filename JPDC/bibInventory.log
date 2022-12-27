@@ -1,0 +1,26 @@
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdftex 2015.1.26)  14 OCT 2016 11:13
+entering extended mode
+**C:/Users/agutierrez/Dropbox/Uni*Dropbox/Colaboracion*Malaga-Ameria/elsarticle
+-minor*issue*rev*Julio*2016/bibInventory.bib
+
+("C:/Users/agutierrez/Dropbox/Uni Dropbox/Colaboracion Malaga-Ameria/elsarticle
+-minor issue rev Julio 2016/bibInventory.bib" [1{C:/ProgramData/MiKTeX/2.9/pdft
+ex/config/pdftex.map}]
+! Missing $ inserted.
+<inserted text> 
+                $
+<to be read again> 
+                   _
+l.229  issue_
+             date = {September 2003},
+? 
+! Emergency stop.
+<inserted text> 
+                $
+<to be read again> 
+                   _
+l.229  issue_
+             date = {September 2003},
+End of file on the terminal!
+
+!  ==> Fatal error occurred, no output PDF file produced!

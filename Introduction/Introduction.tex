@@ -1,0 +1,186 @@
+% this file is called up by thesis.tex
+% content in this file will be fed into the main document
+
+\chapter{Introduction} % top level followed by section, subsection
+\label{Introduction}
+
+
+\section{Background on Dynamic Decision Making}
+Decision making is present in all sort of forms and scopes in our daily live. From the  common decisions individuals have to face as part of everyday life, to the ones made by governments and large corporations. From the irrelevant, to the ones that make an impact in our society or economy. Modelling a situation to take better decisions is often a complex task, due to the level of detail that real-world problems require with different interconnected and interdependent layers. Uncertainty, sometimes intrinsic, otherwise considered because of the unknown interdependencies of the environment, adds complexity to tackle the models and to find solutions. Finally, in situations in which the decisions are taken over time, the dynamic character arises when the interactions of actions affect forehead decisions.
+
+A classical definition of dynamic decision making (DDM) can be found in  \cite{Edwards62}. Dynamic decision making problems can be defined as those that encompass a series of decisions over a set of possible actions that are taken in real time to achieve a single or several objectives in an environment that changes over time, both as a consequence of previous decisions or autonomously due to external factors. One of the complications of DDM problems comes from the fact that decisions are not independent; previous decisions affect and constrain later decisions. Also, previous decisions have an effect over the state of the environment. In this context, dynamic decisions cannot be taken, in general, without considering the long-term effect they may have over the state of the system. %, or focusing on optimising the overall goal
+
+
+Bellman's principle of optimality \cite{Bellman:1957} lies at the core of dynamic decision theory: \emph{An optimal policy has the property that whatever the initial state and decisions are, the remaining decisions must constitute an optimal policy with regard to the state resulting from the first decision}. The mathematical optimization method known as dynamic programming follows the principle of optimality by breaking down a dynamic optimization problem into simpler subproblems. This method can be extended to account for uncertainty. Other combinatorial optimization methods such as branch and bound, artificial intelligence techniques like genetic algorithms and other metaheuristics have been used extensively in literature.
+
+This thesis discusses DDM for several applications of real-world problems. Two main different threads have been studied relating these DDM problems: supply chain management for perishable products and maintenance of offshore wind farms (OWF). In these applications, decisions are made  under uncertainty. In the first case, demand for products is stochastic. The shelf-life of perishable products can be subject to uncertainty as well, although this issue has not been contemplated in this thesis. For the OWF maintenance case, weather circumstances may be considered as they affect the energy outcome of the turbines and harsh conditions prevent maintenance vehicles to leave their bases. Also, the events of failures in the turbines occur randomly.
+
+\label{sec:backgrounddynamic}
+\section{Inventory control}
+\label{sec:inventorycontrol}
+%Classifying inv.control.
+Inventory control is a typical example of making decisions in time, where mostly uncertainty plays a role. This thesis includes studies on lot sizing problems for perishable items. There are some general aspects of inventory control, regardless of perishability, that are defined for any model. The most important considerations are: number of items, inventory locations, holding capacity, review frequency, planning horizon, lead time (between placement and receipt orders), demand and backlogging \cite{Silver98}.
+
+A lot sizing problem may deal with single or multiple items, and single or multiple inventory locations. A maximum holding capacity may be considered at the inventory locations, or assumed to be infinite when space is not a concern. Reviewing the inventory status may be continuous or periodic. In a periodic system, the inventory levels are checked at time intervals, while in a continuous system they are checked for every period. The planning horizon is a time series that may have a finite number of periods or be infinite. The lead time refers to the time in periods, between the placement and the receipt of orders. Demand can be deterministic or stochastic. For the deterministic case, we can differentiate between static, stationary or non-stationary demand. Related to the demand, the system may allow backlogging: if demand exceeds the inventory on hand, the excess can be hold for the next replenishment of items.
+
+We understand \emph{replenishment cycle} as any set of periods between two consecutive replenishment periods. To measure the performance of inventory replenishment cycles, service level metrics are commonly used in the supply chain. The most widely used in industrial practice are the so called $\alpha$-service and $\beta$-service level. The first measures the probability of not having a stock-out during a replenishment cycle. The second, also known as fill rate, denotes the expected percentage of the demand that can be fulfilled during a cycle.
+
+
+%Order quantities Bookbinder
+From a modelling point of view, stochastic lot sizing problems can be classified according to the timing of the orders and their quantity.
+Different strategies can be considered to determine order quantities for the periods. Bookbinder and Tan  defined strategies for the lot sizing problem with stochastic demand \cite{BookbinderandTan}:
+
+\begin{itemize}
+	\item Static uncertainty model
+	\item Static-dynamic uncertainty model
+	\item Dynamic uncertainty model
+\end{itemize}
+
+
+For the \emph{static uncertainty} model, the order quantities are defined at the beginning of the planning horizon, before demand is observed, and cannot be changed through the development of the periods.
+This strategy is appropriate for models in which the order periods and quantities must be known in advance, for instance due to a very long lead time.
+
+For the \emph{static-dynamic} model, order timing is set in advance, at the beginning of the time horizon, but the order quantities rely on the observation of the inventory for each cycle.
+
+Finally, for the \emph{dynamic} model, the most studied model in the literature, both the ordering periods and their quantities are flexible. In practice, the order quantities are decided at the beginning of each period, before demand is observed, knowing the inventory on hand from the previous period.
+
+These models can be adapted for the case of perishable items. In that case, the model may take, or not, the stock age distribution into account, differentiating between a \emph{stock age dependent} or \emph{stock age independent} strategy, respectively. In the models studied in this thesis, both \emph{stock age dependent} and  \emph{stock age independent} strategies are applied.
+
+\subsection{Perishable inventory control}
+\label{subsec:perishableinvcontrol}
+%Perishables
+According to the Food and Agriculture Organisation of the United Nations, around one-third of the food produced worldwide for human consumption is lost or wasted, amounting to about 1.3 billion tons per year. This loss can be translated into a waste of different valuable resources such as land, water or energy. For this reason, research on perishable item inventory control represents an area of increasing interest.
+
+
+Perishable products are those whose quality or utility decays over time. In
+\cite{wee1993}, perishability is defined as the decay, damage, spoilage, evaporation, obsolescence, pilferage, loss of utility or loss of marginal value of a commodity that results in decreasing usefulness from the original one. The shelf-life of a perishable product is the time it can be used or consumed, usually since they have been produced or acquired.
+From a modelling perspective, \cite{Nahmias82} describes two categories for perishable products: (1) products with a fixed shelf-life, in which the shelf-life is known beforehand and remains constant and (2) products with random shelf-life, in which the shelf-life is given by a stochastic variable. This second category can also be subdivided (see \cite{Bakker12}) into two different types: (a) shelf-life deterioration rate depending on age and (b) deterioration rate depending on time or inventory level. %Goyal and Giri (2001)
+More recently, \cite{Amorim2013} proposed a framework for classifying perishability distinguishing three dimensions: (a) physical product deterioration, (b) authority limits, and (c) customer value. Authority limits refer to external regulations that artificially affect the shelf-life of perishables. An example of that is human blood, for which tight shelf-lives are usually considered for prevention. Customer value refers to the perceived value of a product, which may decrease when the product is physically unaltered (newspapers, fashion, consumer electronics).
+
+When it comes to mathematical modelling, in lot sizing models for perishable items, the structure of the optimal replenishment policy is typically complex: the replenishment quantity depends on the individual age categories of current inventory, as well as on all outstanding orders. %from ijpr
+
+
+\subsection{Problem statement}
+\label{subsec:statementperishables}
+The inventory models for perishable products studied in this thesis consider a single-item, single-stock location and production planning problem over a finite time horizon. The considered perishable items have a fixed shelf-life, being scrapped after they reach that limit. The models operate under a FIFO (first in, first out) issuing policy for products. We suppose that items are delivered or produced instantaneously at the beginning of the period that they are ordered. The demand is stochastic and non-stationary. If demand exceeds the inventory volume, it is backlogged or lost. In the second case, the unmet demand is controlled by a service level constraint. Specifically, a $\beta$-service level has been used. Regarding cost parameters, the models consider a fixed setup or ordering cost, procurement and holding costs per unit, disposal cost for items that reach the end of their shelf-life and penalty costs for the unmet demand.
+
+
+The aim of studying this setting is to gain insight for the following research questions:
+\begin{enumerate}
+\item Which order policies are the most appropriate for this problem setting?
+\item In which cases an order policy gives an optimal solution?
+\item How can the use of parallel computing improve the performance of the algorithms to find solutions?
+\item To which extend the use of heuristics give good results in a DDM lot sizing problem for perishable products?
+\end{enumerate}
+
+\subsection{Related works}
+\label{subsec:worksperishables}
+From the original Economic Order Quantity (EOQ) model, first described in \cite{Harris}, lot sizing problems have been studied profusely due to the important role of supply chain management in the economy. Dynamic lot sizing was first introduced by \cite{Wagner:dynamiclotsize}, who discuss a polynomial time exact solution method. One of the precursors of the modern lot sizing theory comes from the definition of the so-called $(s,S)$ or order up to level $S$ policy: if the size of the inventory falls below a level $s$, an order to reach level $S$ is placed. For a general setting in which stochastic demand is stationary and ordering, unit, holding and shortage costs are considered, Scarf  proofs that the $(s,S)$ policy is optimal \cite{ScarfsS}.
+%from ijpr
+Later in \cite{IglehartOptimalitysS}, the $(s,S)$ policy was proven to be optimal for an infinite time horizon as well. Many efficient heuristics appeared over the years in the literature, see e.g. the linear time heuristic introduced in \cite{SilverMeal1973}.
+
+%from ijpr
+Other policies, heuristics and models in general considering uncertainty for the demand appeared later in the literature. Silver  presented a heuristic that looks only one cycle ahead and that is based on three different stages: deciding when to order, the cycle length and the order quantity \cite{citeulike:7292564}. The heuristic introduced in \cite{Askin} determines the replenishment levels minimising the incurred cost per period. Authors in \cite{Bollapragada:1999} improve the latter both in cost and computational time. In \cite{BookbinderandTan} a heuristic in which first the replenishment periods are decided and after that the quantities are fixed is  proposed . In \cite{citeulike:12317242} Tarim and Kingsman present an MILP (Mixed-Integer Linear Programming) model used to decide replenishment moments and quantities simultaneously; Authors in \cite{citeulike:13341691} generalise Tarim and Kingsman's model to handle a range of service level measures as well as lost sales.
+In \cite{doi:10.1287/opre.1110.1033} ordering policies are considered for systems in which the fixed cost is dependent on the order size, in a step function for two or multiple values, deriving policies for these cases. Authors in \cite{doi:10.1287/opre.2013.1238} determine a joint ordering and dynamic pricing strategy for three different models and characterize the optimal policy when inventory cost-rate functions are convex or quasi convex.
+All aforementioned works operate under a non-stationary demand assumption; the importance of developing models that are able to compute optimal or near-optimal non-stationary policies has been discussed by \cite{citeulike:7928534}.
+
+The earliest works in which perishability is considered as an aspect of lot sizing problems appear last century around the sixties. A review of the early literature on lot sizing for perishables is provided by \cite{Nahmias82}; it surveys inventory models for perishable products with a fixed lifetime from 1960 to 1982. Karaesmen et al. \cite{KaraesmenEtal11} make an extensive review of more recent literature for perishables with fixed or random lifetime and considering both discrete and continuous models. In \cite{Bakker12}, inventory models for perishables since 2011 are reviewed.
+
+According to the above reviews, over the last ten years several inventory models have been derived for controlling perishable item inventory systems. For instance, \cite{citeulike:6806835} presents a model similar to  the one discussed in this paper dealing with a periodic review with service-level constraints; however the role of the fixed ordering cost is not considered in their work. More recently, \cite{citeulike:12534249} introduces an SDP approach for a single perishable item subject to non-stationary demand and an $\alpha$ service level constraint. In
+\cite{doi:10.1287/msom.2014.0488} multi-modularity to three dynamic inventory problems is applied; they consider perishability in one of them, for clearance sales, following FIFO issuance. Authors in \cite{doi:10.1287/opre.2014.1261} analyse a joint pricing and inventory control problem for perishables, considering both a backlogging case and a lost-sales case; they allow that inventory can be discarded before perishing.	
+In \cite{citeulike:13666707} an MILP approximation model for a YS policy is presented for an inventory control problem under $\alpha$ service level constraints, non-stationary demand and a single item with a fixed shelf life. In this policy, $Y_t$ provides the order timing, i.e., it is an indicator variable that is set to one if there is a replenishment up to inventory level $S_t$ in period $t$.  In \cite{PaulsWorm2015}, an MILP approximation for a YQ policy obtaining costs that are less than 5\% more than those of the optimal policy is presented.
+
+In this thesis, an stochastic programming (SP) model is presented for a practical production planning problem of a perishable product over a finite time horizon. An YQ policy is studied assuming a static uncertainty strategy. In a different study, a similar model considering a dynamic strategy explores and discusses the effectiveness of two new heuristics.
+
+%\subsection{Contribution to perishable inventory control in this thesis}
+%\label{subsec:contribperishables}
+%What's the difference with thesis outline?
+
+\section{Offshore wind farm maintenance}
+\label{sec:OWFmaintenance}
+
+We can distinguish seven different  renewable energy sources that are known and used. These are hydro power, wind, solar, tidal, wave, geothermal and biomass (including biofuels) \cite{Ellabban2014}. The technology for generating energy from wind has experienced a rapid development during the last decades, whereas the offshore generation has been last  exploited. The offshore wind energy industry is expected to continue its growth tendency in the near future. For instance, the European Wind Energy Association expects in its Central Scenario by 2030 a total installed capacity of 66 GW of offshore wind in the UE \cite{WES2030}.
+
+The increasing interest in investing, optimising and improving the technology of renewable energy sources such as wind and solar power, responds not only to new political policies, but also to a real concern for the environment and the limits of production of fossil fuels (oil, coal and natural gas), in a global economy paradigm of limitless growth.
+
+While other technologies developed for renewable energy sources like hydroelectric have long been studied and implemented, proving to be very profitable, others like wind and sun power face more challenges to achieve profitable levels. In the case of wind power, wind farms are typically large infrastructures that rely on the use of heavy machinery powered with fossil fuels for their installation and maintenance. Therefore, optimising installation and maintenance processes for (offshore) wind farm constitutes an interesting field of research. From the Operations Research perspective, this includes several opportunities, such as determining optimal array cable layouts, minimising the cost of the installed cable \cite{Bauer2015}; determining the optimal turbine layout considering the wind wake effect in order to maximise electricity production on the farm \cite{Chowdhury2013}; and optimising the installation planning itself for a wind farm \cite{Scholz-Reiter2011}. While the installation of an OWF constitutes its major cost, operations and maintenance (O\&M) activity still accounts for about a 25\% of the life-time cost of an OWF \cite{DNVGL}. Optimising the resources used for O\&M activity is an interesting and challenging problem, in which only a few approaches have been analysed and studied so far.
+
+
+
+
+
+
+
+
+\subsection{Problem statement}
+\label{subsec:statementOWF}
+This thesis focuses on the decision making problem of scheduling the O\&M at OWF's and the selection of an appropriate fleet of vessels to support these operations. A more detailed description of the problem at hand is presented in Chapter \ref{Chap:iccs2017}. The model is a supply chain problem type; there is an OWF which turbines require maintenance during a time horizon. The aim is to determine an optimal fleet of vessels to support all the O\&M activities needed. The decision maker may choose from a variety of vessel types to charter during the time horizon. The vessels operate at the OWF from their bases, that are at a certain distance to the OWF and have a certain capacity for holding vessels at a cost. Each vessel may perform activities during each shift, going from their base and returning to it by the end of each shift. Weather conditions apply preventing vessels to sail when the conditions are not adequate.
+
+The type of maintenance activities that are performed at the OWF can be classified into two groups: preventive and corrective. Preventive activity types correspond to those that have the aim of prolonging the shelf-life of the turbines and prevent malfunctioning. A number of each preventive type is supposed to be performed during the time horizon. The corrective types aim to fix their corresponding failure types in the turbines. A corrective activity can be performed since the moment a failure is diagnosed, updated at the beginning of each period.
+
+At the end of the time horizon, the activity types (preventive or corrective) that have not been performed incur a penalty cost. Downtime costs apply since the moment a turbine presents a failure until it is fixed. While performing a preventive activity, the turbine must be shut down and downtime costs apply as well, due to loss of energy generation. Other costs are associated to the missions the vessels perform, the chartering costs and the use of the selected bases.
+
+This problem setting is the base for formulating the following research questions for this thesis:
+
+\begin{enumerate}
+	\item Is an MILP model suitable for an application for selecting a fleet of vessels to support the maintenance at OWF's?
+	\item Is it possible to find an efficient and realistic heuristic for scheduling O\&M activities at OWF's with failures and weather uncertainty? What are the differences with a perfect information MILP model?
+\end{enumerate}
+
+
+
+\subsection{Previous works}
+\label{subsec:worksOWF}
+Optimization for maintenance operations at OWF is a novel area with few research papers that nonetheless is rapidly gaining interest. A literature review on DSS for OWF's is given by \cite{hofmannrev}. Recently, a mathematical model for maintenance operations at OWFs using a fleet of vessels has been presented in \cite{Raknes2017}. The authors also propose to solve it using a rolling horizon heuristic. Other recent deterministic and stochastic model formulations for vessel composition and maintenance optimization  can be found in \cite{Gundegjerde2015} and \cite{HALVORSENWEARE2013}.
+%
+In \cite{EJOR2016}, a model for maintenance routing
+and scheduling at offshore wind farms based on the Dantzig-Wolfe decomposition method has been implemented.
+In that work, a mixed integer linear program is solved for each subset of turbines to generate all  feasible routes and maintenance schedules for the vessels for each period.
+The routes take several constraints into account, such as weather conditions, the availability of vessels,
+and the number of technicians available at the operation and maintenance base.
+%
+In \cite{Stalhane2016357}, a two-stage stochastic programming model is presented to determine a cost-optimal fleet size and mix for
+O\&M activities at offshore wind farms for the total expected lifetime of the OWF. For that, the study considers time periods fixed to three months. The uncertainty about the failures in turbines constitutes a high cost for the maintenance of OWF's. In \cite{Helsen2016}, a big data approach is used to gain insights to predict failures in turbines.
+
+In this thesis, a DDS model for selecting a fleet of vessels to perform O\&M at OWF's is presented. The model considers scenarios of deterministic weather circumstances and failures in turbines that are fixed by technicians attending the turbines using the fleet of vessels available. A heuristic is proposed and confronted with the solutions given by the MILP model based on perfect information.
+
+
+%\subsection{Contribution to OWF maintenance models to this thesis}
+%\label{subsec:contribOWF}
+%\section{Research opportunities}
+%\label{sec:opportunities}
+\section{Thesis outline}
+\label{sec:outline}
+%\section{Overview of papers in this thesis}
+%\label{sec:paperoverview}
+This thesis is organised as follows. The first part of this thesis focuses on perishable lot sizing problems.
+In Chapter \ref{Chap:iccsa2015}, a YQ policy for a lot sizing problem for perishable items is discussed. In this policy, $Y_t$ represents the order timing, an indicator variable that is set to one if there is a replenishment of size $Q_t$ in period $t$. Chapter \ref{Chap:jpdc} follows analysing and evaluating parallel implementations for the model presented in the previous chapter. In Chapter \ref{Chap:ijpr}, another lot sizing model following a dynamic uncertainty strategy is studied: an extension of Silver's heuristic for perishables is confronted with the optimal policies given by a SDP model. The second part of this thesis focuses on studying decision support systems for the maintenance of an OWF. Chapter \ref{Chap:iccs2017}, proposes a decision support system to select a fleet of vessels and to schedule maintenance operations at an offshore wind farm. In Chapter \ref{Chap:ejor}, the previous model is extended considering weather circumstances and a broader set of possible patterns of maintenance operations. A heuristic for the operational stage (decisions for scheduling the operations during the time horizon) is discussed. This paper has been submitted recently to an international journal indexed in JCR and it is under peer review revision at the moment. Finally, Chapter \ref{Chap:Contributions} summarises the contributions of this thesis.
+
+
+\section{Overview of papers}
+
+There are five papers presented in this thesis, from Chapter \ref{Chap:iccsa2015} to Chapter \ref{Chap:ejor}, including two journal papers, two conference papers and a submitted paper to a journal. The corresponding papers for each chapter are referenced and listed below.
+
+\begin{itemize}
+\setlength{\itemindent}{.45in}
+
+\item [Chapter \ref{Chap:iccsa2015}]  Reference \cite{GutierrezAlcoba:ICCSA2015}:\\ \bibentry{GutierrezAlcoba:ICCSA2015}
+
+\item [Chapter \ref{Chap:jpdc}] Reference \cite{GutierrezAlcoba201712}: \\ \bibentry{GutierrezAlcoba201712}
+
+\item [Chapter \ref{Chap:ijpr}] Reference \cite{Gutierrez-Alcoba16}: \\ \bibentry{Gutierrez-Alcoba16}
+
+\item [Chapter \ref{Chap:iccs2017}] Reference~\cite{GutierrezAlcoba:ICCS2017}: \\ \bibentry{GutierrezAlcoba:ICCS2017}
+
+\item [Chapter \ref{Chap:ejor}] Reference~\cite{GutierrezAlcoba:EJOR2017}: \\ \bibentry{GutierrezAlcoba:EJOR2017}
+
+
+\end{itemize}
+%: ----------------------- paths to graphics ------------------------
+
+% change according to folder and file names
+\ifpdf
+    \graphicspath{{X/figures/PNG/}{X/figures/PDF/}{X/figures/}}
+\else
+    \graphicspath{{X/figures/EPS/}{X/figures/}}
+\fi

@@ -1,0 +1,94 @@
+\typeout{titulo}
+
+%===================================================================================================
+%
+%                                       PRIMER TITULO
+%
+%===================================================================================================
+
+\thispagestyle{empty}   % Página sin cabecera ni pie de página
+
+%\vspace*{1.3cm}
+\begin{figure}[htb]
+  \centerline{\includegraphics [width=3cm,height=3cm]{./Titulo/figures/logo.eps}}  % La figura ocupa el 35% del ancho de linea
+\end{figure}
+
+%\vspace*{1cm}
+\begin{center}
+  \LARGE \sffamily University of Almer\'ia \\
+  \large \sffamily Department of Informatics \\
+\end{center}
+\bigskip
+\noindent \rule{\linewidth}{3pt}
+
+
+
+\bigskip
+\begin{center}
+  \Huge \textsc{Ph.D. Thesis}
+\end{center}
+
+\vspace*{2cm}
+\begin{center}
+
+ \LARGE \textsc{High Performance Computing for solving large sparse systems. Optical Diffraction Tomography as a case of study.}
+ \LARGE \textsc{(Computaci\'on de altas prestaciones para la resoluci\'on de sistemas dispersos de grandes dimensiones. Tomograf\'ia \'Optica
+Difraccional como caso de estudio)}
+\end{center}
+
+\vspace*{2cm}
+\begin{center}%flushright}
+  \begin{tabular}{c}
+    Gloria Ortega L\'opez \\
+    Almer\'ia, April 2014 \\
+  \end{tabular}
+\end{center}
+
+\clearemptydoublepage
+
+%===================================================================================================
+%
+%                                          SEGUNDO TITULO
+%
+%===================================================================================================
+
+\thispagestyle{empty}   % Página sin cabecera ni pie de página
+
+%\rule{\linewidth}{2pt}
+
+%\bigskip
+%\vspace*{2cm}
+\begin{center}
+  \LARGE \bf Ph.D. Thesis
+\end{center}
+\bigskip
+%\bigskip
+\begin{center}
+    \LARGE \textsf{High Performance Computing for solving large sparse systems. Optical Diffraction Tomography as a case of study.}
+     \LARGE \textsf{(Computaci\'on de altas prestaciones para la resoluci\'on de sistemas dispersos de grandes dimensiones. Tomograf\'ia \'Optica
+Difraccional como caso de estudio)}
+\end{center}
+
+
+%\vspace*{1.3cm}
+\begin{figure}[htb]
+  \centerline{\includegraphics [width=4cm,height=4cm]{./Titulo/figures/logo.eps}}  % La figura ocupa el 35% del ancho de linea
+\end{figure}
+
+%\vspace*{1cm}
+\begin{center}
+  \Large \textsf{University of Almer\'ia} \\
+  \Large \textsf{Department of Informatics}
+\end{center}
+
+%\vspace*{1cm}
+\vspace*{2cm}
+\begin{flushright}
+  \begin{tabular}{ll}
+    \bf Author: & Gloria Ortega L\'opez\\
+    \bf Supervisors: & Inmaculada Garc\'ia Fern\'andez \\
+    & Gracia Ester Mart\'in Garz\'on \\
+  \end{tabular}
+\end{flushright}
+
+\vspace*{0.8cm} \centerline{\large{ \emph{Almer\'ia, April 2014}}}

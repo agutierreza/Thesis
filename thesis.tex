@@ -1,0 +1,368 @@
+
+% ----------------------------------------------------------------------
+%                   LATEX TEMPLATE FOR PhD THESIS
+% ----------------------------------------------------------------------
+
+%: Style file for Latex
+% Most style definitions are in the external file PhDthesisPSnPDF.
+% In this template package, it can be found in ./Latex/Classes/
+\documentclass[twoside,11pt]{Latex/Classes/PhDthesisPSnPDF}
+
+
+%: Macro file for Latex
+% Macros help you summarise frequently repeated Latex commands.
+% Here, they are placed in an external file /Latex/Macros/MacroFile1.tex
+% An macro that you may use frequently is the figuremacro (see introduction.tex)
+
+\include{Latex/Macros/MacroFile1}
+
+\usepackage{amsmath}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{amssymb}
+\usepackage{multirow}
+\usepackage{amssymb}
+\usepackage{dsfont}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{breakurl}
+\usepackage{ucs}
+\usepackage{mathtools}
+\usepackage{graphicx}
+%\usepackage{epstopdf}
+%\usepackage{graphicx}
+\usepackage[resetlabels]{multibib}
+\usepackage[tight,footnotesize]{subfigure}
+\usepackage{array}
+\usepackage{eqparbox}
+\usepackage[nottoc]{tocbibind}
+
+%%%%%%
+
+%\usepackage{epstopdf}
+
+\usepackage{lscape}
+\usepackage{pgfplots}
+%\usepackage{xspace}
+%
+%\usepackage{algpseudocode}
+
+%\nocite{*}
+%\usepackage{bookmark} %esto lo he puesto yo: Gloria
+%Options: Sonny, Lenny, Glenn, Conny, Rejne, Bjarne, Bjornstrup
+\usepackage[Bjornstrup]{fncychap} %cambia el estilo de los capitulos, hay varias opciones.
+%\usepackage[dvipdfm,pagebackref,bookmarks=true]{hyperref}
+\usepackage[]{hyperref}
+%-------------------------------------------------------------------
+
+\newcommand{\blue}{\textcolor{blue}}
+\newcommand{\myname}[1]{\underline{A. Gutierrez-Alcoba}} %para que aparezca mi nombre subrayado en la bibliografía.
+
+\def\NoNumber#1{{\def\alglinenumber##1{}\State #1}\addtocounter{ALG@line}{-1}}
+
+% ----------------------------------------------------------------------
+
+%% turn of those nasty overfull and underfull hboxes
+\hbadness=10000
+\hfuzz=50pt
+
+
+%: --------------------------------------------------------------
+%:                  FRONT MATTER: dedications, abstract,..
+% --------------------------------------------------------------
+
+% Se separan correctamente las palabras
+\hyphenation{inno-va-cion fa-mi-lia-res cons-ci-en-te es-tu-dia-dos ine-qua-li-ties Co-rrec-ti-ve se-ven-ties he-te-ro-ge-neous cons-traint co-rres-pon-ding Di-ffe-ren-tial Li-te-ra-tu-re mo-dels mo-de-led de-ve-lop-ment des-pi-te mo-de-lo com-pi-ler des-cri-tos li-te-ra-tu-ra dis-po-ner Con-cre-ta-men-te re-so-lu-ci-on de-sa-rro-lla-do e-va-lua-ted co-lla-bo-ra-ted a-pro-ve-cha-mien-to co-pro-ce-ssors}
+
+
+%\algnewcommand{\LineComment}[1]{\State \(\triangleright\) #1}
+
+\renewcommand\algorithmiccomment[1]{%
+  \eqparbox{COMMENT}{#1}%
+}
+
+
+\usepackage{amsthm}
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[chapter] % reset theorem numbering for each chapter
+
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition} % definition numbers are dependent on theorem numbers
+\newtheorem{proposition}[thm]{Proposition}
+\newtheorem{lemma}[thm]{Lemma}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{mydef}{Definition}
+\newtheorem{example}[thm]{Example} % same for example numbers
+
+%\pagestyle{empty}
+\begin{document}
+
+%\language{english}
+
+% sets line spacing
+\renewcommand\baselinestretch{1.2}
+\baselineskip=18pt plus1pt
+
+\let\origdoublepage\cleardoublepage
+\newcommand{\clearemptydoublepage}{%
+  \clearpage
+  {\pagestyle{plain}\origdoublepage}%
+}
+\let\cleardoublepage\clearemptydoublepage
+\makeatletter
+\newcommand\newpart{%
+  \clearemptydoublepage
+      \@tempswafalse
+
+  \secdef\@part\@spart}
+ \let\part\newpart
+ \def\@endpart{\vfil\newpage
+                 \null
+                 \thispagestyle{plain}%
+                 \newpage
+}
+
+
+%: ----------------------- generate cover page ------------------------
+
+%\maketitle  % command to print the title page with above variables
+
+
+%: ----------------------- cover page back side ------------------------
+% Your research institution may require reviewer names, etc.
+% This cover back side is required by Dresden Med Fac; uncomment if needed.
+
+%\newpage
+%\vspace{10mm}
+%1. Reviewer: Name
+%
+%\vspace{10mm}
+%2. Reviewer:
+%
+%\vspace{20mm}
+%Day of the defense:
+%
+%\vspace{20mm}
+%\hspace{70mm}Signature from head of PhD committee:
+
+%\pagestyle{empty}
+
+% Titulo
+
+%\pagestyle{empty} %GLORIA: PARA QUITAR LA NUMERACIÓN DE LAS PRIMERAS PÁGINAS.
+\pagenumbering{gobble}
+\typeout{titulo}
+\input{./Titulo/Titulo.tex}
+\pagenumbering{gobble}
+\clearemptydoublepage
+\pagenumbering{gobble}
+
+
+
+
+\phantomsection
+\pagenumbering{gobble}
+\include{0_frontmatter/abstractSpanish}
+%\addcontentsline{toc}{chapter}{Aval}% (Spanish)}
+\clearemptydoublepage
+
+
+%------------------- dedicación corta ------------------------
+% Your institution may have specific regulations if you need an abstract and where it is to be placed in the document. The default here is just after title.
+%\include{0_frontmatter/dedication}
+%\clearemptydoublepage
+
+%: ----------------------- abstract (prefacio) debe estar en ingles y español------------------------
+%\frontmatter
+\phantomsection
+\pagenumbering{gobble}
+\include{0_frontmatter/acknowledgement}
+%\addcontentsline{toc}{chapter}{Agradecimientos}% (Acknowledgements)}
+\clearemptydoublepage
+
+
+
+\setcounter{secnumdepth}{3} % organisational level that receives a numbers
+\setcounter{tocdepth}{3}    % print table of contents for level 3
+
+
+\phantomsection
+\pagenumbering{roman}   % Numeros romanos (minusculas)
+\include{0_frontmatter/abstractEnglish}
+\addcontentsline{toc}{chapter}{Preface}% (English)}
+\clearemptydoublepage
+%\phantomsection
+%\include{0_frontmatter/abstractSpanish}
+%\addcontentsline{toc}{chapter}{Prefacio}% (Spanish)}
+%\clearemptydoublepage
+
+
+
+
+%: ----------------------- contents ------------------------
+%3 y 3
+
+%\phantomsection
+%\addcontentsline{toc}{section}{Table of Contents}
+\tableofcontents            % print the table of contents
+\clearemptydoublepage
+% levels are: 0 - chapter, 1 - section, 2 - subsection, 3 - subsection
+
+
+%: ----------------------- list of figures/tables ------------------------
+
+\phantomsection
+\listoffigures
+\clearemptydoublepage
+\phantomsection
+\listoftables
+\clearemptydoublepage
+\phantomsection
+\listofalgorithms
+\addcontentsline{toc}{chapter}{List of Algorithms}% (English)}
+\clearemptydoublepage %: ----------------------- glossary ------------------------
+
+
+% Tie in external source file for definitions: /0_frontmatter/glossary.tex
+% Glossary entries can also be defined in the main text. See glossary.tex
+
+
+
+
+\begin{multicols}{2} % \begin{multicols}{#columns}[header text][space]
+\begin{footnotesize} % scriptsize(7) < footnotesize(8) < small (9) < normal (10)
+
+\printnomenclature[1.5cm] % [] = distance between entry and description
+\label{nom} % target name for links to glossary
+
+\end{footnotesize}
+\end{multicols}
+
+
+
+%: --------------------------------------------------------------
+%:                  MAIN DOCUMENT SECTION
+% --------------------------------------------------------------
+
+% the main text starts here with the introduction, 1st chapter,...
+\mainmatter
+
+%\renewcommand{\chaptername}{} % uncomment to print only "1" not "Chapter 1"
+
+
+%: ----------------------- subdocuments ------------------------
+
+% Parts of the thesis are included below. Rename the files as required.
+% But take care that the paths match. You can also change the order of appearance by moving the include commands.
+
+
+
+\include{Introduction/Introduction}		
+\clearemptydoublepage
+\include{iccsa2015/iccsa2015}		
+\clearemptydoublepage	
+\include{JPDC/JPDC}
+\clearemptydoublepage	
+\include{IJPR/IJPR}
+\clearemptydoublepage
+\include{ICCS2017/ICCS2017}
+\clearemptydoublepage	
+\include{EJOR/EJOR}
+\clearemptydoublepage
+\include{GlobalConclusions/GlobalConclusions}        % description of lab methods
+\clearemptydoublepage	
+%%%%%%%%%%%%gloria
+%\pagestyle{fancy}
+%\renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\thechapter. #1 }}{}}
+%\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+%\fancyhf{}
+%\fancyhead[RO]{}
+%\fancyhead[LE]{APPENDIX I}
+%\fancyfoot[C]{\thepage}
+%\renewcommand{\headrulewidth}{0.5pt}
+%\renewcommand{\footrulewidth}{0pt}
+%\addtolength{\headheight}{0.5pt}
+%\fancypagestyle{plain}{
+%  \fancyhead{}
+%  \renewcommand{\headrulewidth}{0pt}
+%}
+\fancyhead[LE]{APPENDIX I}
+\fancyfoot[C]{\thepage}
+%%%%%%%%%%%%%%%%%%%
+\include{9_backmatter/appendixA}
+\addcontentsline{toc}{chapter}{Appendix I: Publications arising from this thesis}
+\clearemptydoublepage
+
+%%%%%%%%%%%%%%%%%%%%glo%ria
+%\pagestyle{fancy}
+%\renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\thechapter. #1 }}{}}
+%\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+%\fancyhf{}
+%\fancyhead[RO]{}
+%\fancyhead[LE]{APPENDIX II}
+%\fancyfoot[C]{\thepage}
+%\renewcommand{\headrulewidth}{0.5pt}
+%\renewcommand{\footrulewidth}{0pt}
+%\addtolength{\headheight}{0.5pt}
+%\fancypagestyle{plain}{
+%  \fancyhead{}
+%  \renewcommand{\headrulewidth}{0pt}
+%}
+\fancyhead[LE]{APPENDIX II}
+\fancyfoot[C]{\thepage}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{9_backmatter/appendixB}
+\addcontentsline{toc}{chapter}{Appendix II: Other publications produced during the elaboration of this thesis}
+\clearemptydoublepage
+
+%%%%%%%%%%%%%%%%%%%%gloria
+%\pagestyle{fancy}
+%\renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\thechapter. #1 }}{}}
+%\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+%\fancyhf{}
+%\fancyhead[RO]{}
+%\fancyhead[LE]{RESUMEN EN ESPA\~NOL}
+%\fancyfoot[C]{\thepage}
+%\renewcommand{\headrulewidth}{0.5pt}
+%\renewcommand{\footrulewidth}{0pt}
+%\addtolength{\headheight}{0.5pt}
+%\fancypagestyle{plain}{
+%  \fancyhead{}
+%  \renewcommand{\headrulewidth}{0pt}
+%}
+\fancyhead[LE]{RESUMEN EN ESPA\~NOL}
+\fancyfoot[C]{\thepage}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\include{9_backmatter/resumenespanol}
+\addcontentsline{toc}{chapter}{Resumen en espa\~nol}
+\clearemptydoublepage
+
+%%%%%%%%%%%%%%%%%%%%bibliography gloria
+%\pagestyle{fancy}
+%\renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\thechapter. #1 }}{}}
+%\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+%\fancyhf{}
+%\fancyhead[RO]{}
+%\fancyhead[LE]{BIBLIOGRAPHY}
+%\fancyfoot[C]{\thepage}
+%\renewcommand{\headrulewidth}{0.5pt}
+%\renewcommand{\footrulewidth}{0pt}
+%\addtolength{\headheight}{0.5pt}
+%\fancypagestyle{plain}{
+%  \fancyhead{}
+%  \renewcommand{\headrulewidth}{0pt}
+%}
+
+\fancyhead[RO]{}
+\fancyhead[LE]{BIBLIOGRAPHY}
+\fancyfoot[C]{\thepage}
+
+\renewcommand{\bibname}{Bibliography} % changes the header; default: Bibliography
+\bibliographystyle{plainurl}%{wileyj}
+\bibliography{9_backmatter/references} % adjust this to fit your BibTex file
+
+% the back matter: appendix and references close the thesis
+
+
+\end{document}
